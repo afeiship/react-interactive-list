@@ -1,29 +1,29 @@
 {
-  "name": "react-badge",
+  "name": "react-round",
   "version": "0.1.0",
-  "description": "Badge component for react.",
+  "description": "React component for badge/label/tag and other radius view.",
   "author": "afeiship <1290657123@qq.com>",
   "keywords": [
     "components",
-    "react-badge",
+    "react-round",
     "ui",
     "theme"
   ],
   "private": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/afeiship/react-badge.git"
+    "url": "git+https://github.com/afeiship/react-round.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/afeiship/react-badge/issues"
+    "url": "https://github.com/afeiship/react-round/issues"
   },
-  "homepage": "https://github.com/afeiship/react-badge",
+  "homepage": "https://github.com/afeiship/react-round",
   "scripts": {
     "dev": "node build/dev-server.js",
     "build": "node build/build.js"
   },
-  "main": "./dist/react-badge.js",
+  "main": "./dist/react-round.js",
   "devDependencies": {
     "autoprefixer": "^6.4.0",
     "autoprefixer-loader": "^3.2.0",

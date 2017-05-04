@@ -1,2 +1,2 @@
-import ReactBadge from 'components/react-badge';
-export default ReactBadge;
+import ReactRound from 'components/react-round';
+export default ReactRound;

@@ -1,9 +1,9 @@
-# react-badge
-> Badge component for react.
+# react-round
+> React component for badge/label/tag and other radius view.
 
 ## size:
-+ 8.0K	react-badge.js
-+ 44K	react-badge.js.map
++ 8.0K	react-round.js
++ 44K	react-round.js.map
 
 ## properties:
 ```javascript
@@ -15,19 +15,28 @@
 
 ## usage:
 ```jsx
-class App extends React.Component{
-  _filter(inValue){
+class App extends React.Component {
+  _filter(inValue) {
     var value = parseInt(inValue);
-    return value>1000 ? '1000+': value;
+    if (value) {
+      return value > 1000 ? '1000+' : value;
+    }
+    return '';
   }
-  render(){
+
+  render() {
     return (
-      <div className="hello-react-badge">
-        <ReactBadge children="22" filter={this._filter.bind(this)} />
-        <ReactBadge children="99" filter={this._filter.bind(this)} />
-        <ReactBadge children="1000" filter={this._filter.bind(this)} />
-        <ReactBadge children="10002" filter={this._filter.bind(this)} />
-    </div>
+      <div className="hello-react-round">
+        <h1>Badge</h1>
+        <ReactRound children="0" filter={this._filter.bind(this)}/>
+        <ReactRound children="22" filter={this._filter.bind(this)}/>
+        <ReactRound children="10002" filter={this._filter.bind(this)}/>
+        <div className="blank-10"></div>
+        <div className="blank-10"></div>
+        <h1>Tag</h1>
+        <ReactRound radius="5px" children="22" filter={this._filter.bind(this)}/>
+        <ReactRound radius="5px" children="10002" filter={this._filter.bind(this)}/>
+      </div>
     );
   }
 }

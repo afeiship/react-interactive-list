@@ -9,7 +9,7 @@ base.entry = {
 base.output = {
   path: config.build.assetsRoot,
   publicPath: config.build.assetsPublicPath,
-  filename: 'react-badge.js',
+  filename: 'react-round.js',
   library: 'ReactBadge',
   libraryTarget: 'umd'
 }
