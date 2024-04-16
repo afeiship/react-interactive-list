@@ -1,7 +1,7 @@
 {
   "name": "@jswork/react-interactive-list",
   "homepage": "https://js.work",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "React interactive-list.",
   "license": "MIT",
   "main": "dist/index.js",
