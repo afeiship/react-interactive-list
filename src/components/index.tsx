@@ -1,5 +1,5 @@
 import noop from '@jswork/noop';
-import ReactList from '@jswork/react-list';
+import ReactList, { ReactListProps } from '@jswork/react-list';
 import cx from 'classnames';
 import React, { Component, HTMLAttributes } from 'react';
 import fdp from 'fast-deep-equal';
@@ -54,6 +54,8 @@ export type ReactInteractiveListProps = {
    * Forwards a ref to the underlying div element.
    */
   forwardedRef: any;
+
+  contentProps: ReactListProps;
 } & HTMLAttributes<any>;
 
 interface ReactInteractiveListState {
