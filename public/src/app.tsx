@@ -2,6 +2,18 @@ import React, { useState } from 'react';
 import ReactInteractiveList from '../../src/main';
 import styled from 'styled-components';
 
+const messages = [
+  'I wondered why the baseball was getting bigger. Then it hit me.',
+  'Police were called to a day care, where a three-year-old was resisting a rest.',
+  'Did you hear about the guy whose whole left side was cut off? He’s all right now.',
+  'The roundest knight at King Arthur’s round table was Sir Cumference.',
+  'To write with a broken pencil is pointless.',
+  'When fish are in schools they sometimes take debate.',
+  'The short fortune teller who escaped from prison was a small medium at large.',
+  'A thief who stole a calendar… got twelve months.',
+  'A thief fell and broke his leg in wet cement. He became a hardened criminal.'
+].map((message, index) => ({ message, index, id: `id_${index}` }));
+
 const Container = styled.div`
   width: 80%;
   margin: 30px auto 0;
@@ -22,25 +34,15 @@ const Container = styled.div`
 `;
 
 export default () => {
-  const [items, setItems] = useState([
-    'I wondered why the baseball was getting bigger. Then it hit me.',
-    'Police were called to a day care, where a three-year-old was resisting a rest.',
-    'Did you hear about the guy whose whole left side was cut off? He’s all right now.',
-    'The roundest knight at King Arthur’s round table was Sir Cumference.',
-    'To write with a broken pencil is pointless.',
-    'When fish are in schools they sometimes take debate.',
-    'The short fortune teller who escaped from prison was a small medium at large.',
-    'A thief who stole a calendar… got twelve months.',
-    'A thief fell and broke his leg in wet cement. He became a hardened criminal.'
-  ]);
+  const [items, setItems] = useState(messages);
 
   const template = ({ item, index }, cb) => {
     const idx = index + 1;
     return (
-      <div className="message" key={index}>
+      <div className="message" key={item.id}>
         <button onClick={cb}>DELETE</button>
         <span>
-          {idx}.{item}
+          {idx}.{item.message}
         </span>
       </div>
     );
@@ -51,7 +53,10 @@ export default () => {
   };
 
   const templateDefault = () => {
-    return 'New Item';
+    return {
+      message: 'New items',
+      id: `id_${Math.random()}`
+    };
   };
 
   const handleChange = (e) => {
@@ -59,8 +64,6 @@ export default () => {
     console.log('current items: ', value);
     setItems(value);
   };
-
-  console.log('items: ', items);
 
   return (
     <Container>
