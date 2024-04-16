@@ -101,8 +101,12 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   get listView() {
     const { value } = this.state;
     const { wrapped } = this.props;
-    const as = wrapped ? 'div' : React.Fragment;
-    return <ReactList as={as} items={value} template={this.template} />;
+    const listProps = {
+      as: wrapped ? 'div' : React.Fragment,
+      items: value,
+      template: this.template
+    };
+    return <ReactList {...listProps} />;
   }
 
   get createView() {
