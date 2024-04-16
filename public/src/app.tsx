@@ -5,12 +5,19 @@ import styled from 'styled-components';
 const Container = styled.div`
   width: 80%;
   margin: 30px auto 0;
-
+  button {
+    margin-right: 10px;
+  }
   .message {
     border-radius: 1em;
+    padding: 6px 12px;
     margin: 0.5em;
     line-height: 1.1em;
     background-color: lightblue;
+    transition: background-color 0.3s;
+    &:hover {
+      background-color: lightcoral;
+    }
   }
 `;
 
@@ -31,12 +38,10 @@ export default () => {
     const idx = index + 1;
     return (
       <div className="message" key={index}>
-        <p>
-          <span>
-            {idx}.{item}
-          </span>
-          <button onClick={cb}>DELETE</button>
-        </p>
+        <button onClick={cb}>DELETE</button>
+        <span>
+          {idx}.{item}
+        </span>
       </div>
     );
   };
@@ -51,14 +56,16 @@ export default () => {
 
   const handleChange = (e) => {
     const { value } = e.target;
+    console.log('current items: ', value);
     setItems(value);
   };
 
-  console.log('render...');
+  console.log('items: ', items);
 
   return (
     <Container>
       <ReactInteractiveList
+        wrapped
         items={items}
         template={template}
         templateCreate={templateCreate}

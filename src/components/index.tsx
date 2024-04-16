@@ -1,5 +1,5 @@
 import noop from '@jswork/noop';
-import ReactList, { ReactListProps } from '@jswork/react-list';
+import ReactList from '@jswork/react-list';
 import cx from 'classnames';
 import React, { Component, HTMLAttributes } from 'react';
 import fdp from 'fast-deep-equal';
@@ -54,8 +54,14 @@ export type ReactInteractiveListProps = {
    * Forwards a ref to the underlying div element.
    */
   forwardedRef: any;
-
-  contentProps: ReactListProps;
+  /**
+   * The children reverse order.
+   */
+  reverse?: boolean;
+  /**
+   * If wraped list with div.
+   */
+  wrapped?: boolean;
 } & HTMLAttributes<any>;
 
 interface ReactInteractiveListState {
@@ -72,7 +78,9 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     templateCreate: noop,
     templateDefault: noop,
     onChange: noop,
-    onError: noop
+    onError: noop,
+    reverse: false,
+    wrapped: false
   };
 
   get length() {
@@ -92,7 +100,9 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   get listView() {
     const { value } = this.state;
-    return <ReactList items={value} template={this.template} />;
+    const { wrapped } = this.props;
+    const as = wrapped ? 'div' : React.Fragment;
+    return <ReactList as={as} items={value} template={this.template} />;
   }
 
   get createView() {
@@ -107,13 +117,19 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     return templateCreate({ items: _value }, cb);
   }
 
-  constructor(inProps) {
+  get calcChildView() {
+    const { reverse } = this.props;
+    const items = reverse ? [this.createView, this.listView] : [this.listView, this.createView];
+    return React.Children.map(items, (item) => item);
+  }
+
+  constructor(inProps: ReactInteractiveListProps) {
     super(inProps);
     const { items } = inProps;
     this.state = { value: [...items] };
   }
 
-  shouldComponentUpdate(inProps) {
+  shouldComponentUpdate(inProps: ReactInteractiveListProps) {
     const { items } = inProps;
     const isEqual = fdp(this.state.value, items);
     if (!isEqual) {
@@ -134,7 +150,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     return template({ item, index, items: _value }, cb);
   };
 
-  handleChange = (inValue) => {
+  handleChange = (inValue: any[]) => {
     const { onChange, onError, min, max } = this.props;
     const target = { value: inValue };
     this.setState(target, () => {
@@ -151,6 +167,8 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   render() {
     const {
       className,
+      wrapped,
+      reverse,
       forwardedRef,
       min,
       max,
@@ -165,8 +183,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
     return (
       <div className={cx(CLASS_NAME, className)} ref={forwardedRef} {...props}>
-        {this.listView}
-        {this.createView}
+        {this.calcChildView}
       </div>
     );
   }
