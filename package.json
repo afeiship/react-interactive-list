@@ -1,7 +1,7 @@
 {
   "name": "@jswork/react-interactive-list",
   "homepage": "https://js.work",
-  "version": "1.2.4",
+  "version": "1.2.6",
   "description": "React interactive-list.",
   "license": "MIT",
   "main": "dist/index.js",
@@ -65,6 +65,7 @@
     "style-loader": "^2.0.0",
     "styled-components": "^5.3.0",
     "ts-jest": "^27.1.1",
+    "tslib": "^2.6.2",
     "typescript": "^4.9.5",
     "vite": "^2.3.4",
     "vite-plugin-pwa": "^0.7.3"
@@ -78,5 +79,11 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
-  }
+  },
+  "keywords": [
+    "react",
+    "component",
+    "interactive",
+    "list"
+  ]
 }

@@ -41,7 +41,7 @@ export default () => {
     );
   };
 
-  const templateCreate = ({ items }, cb) => {
+  const templateCreate = (_, cb) => {
     return <button onClick={cb}>Create</button>;
   };
 
