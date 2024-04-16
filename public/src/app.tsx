@@ -20,6 +20,18 @@ const Container = styled.div`
   button {
     margin-right: 10px;
   }
+  .react-list {
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    border-radius: 3px;
+    margin: 4px auto;
+    display: flex;
+    flex-wrap: wrap;
+    transition: background-color 0.3s;
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
   .message {
     border-radius: 1em;
     padding: 6px 12px;
