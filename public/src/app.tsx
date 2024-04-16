@@ -25,8 +25,6 @@ const Container = styled.div`
     background-color: #f9f9f9;
     border-radius: 3px;
     margin: 4px auto;
-    display: flex;
-    flex-wrap: wrap;
     transition: background-color 0.3s;
     &:hover {
       background-color: #f0f0f0;
@@ -81,6 +79,7 @@ export default () => {
     <Container>
       <ReactInteractiveList
         wrapped
+        reverse
         items={items}
         template={template}
         templateCreate={templateCreate}
