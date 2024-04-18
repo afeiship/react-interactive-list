@@ -187,6 +187,13 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     return true;
   }
 
+  componentWillUnmount() {
+    eventBus.off('add', this.add);
+    eventBus.off('remove', this.remove);
+    eventBus.off('set', this.set);
+    eventBus.off('clear', this.clear);
+  }
+
   template = ({ item, index }) => {
     const { template } = this.props;
     const { value } = this.state;
