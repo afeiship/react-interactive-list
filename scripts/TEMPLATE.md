@@ -26,6 +26,10 @@ npm install -S @jswork/react-interactive-list
   ```js
 __GENERATE_DAPP__
   ```
+3. import `global.d.ts`
+```ts
+/// <reference types="@jswork/react-interactive-list/global.d.ts" />
+```
 
 ## preview
 - https://afeiship.github.io/react-interactive-list/

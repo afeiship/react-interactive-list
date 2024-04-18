@@ -1,13 +1,14 @@
 {
   "name": "@jswork/react-interactive-list",
   "homepage": "https://js.work",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "React interactive-list.",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/main.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "globals.d.ts"
   ],
   "scripts": {
     "dev": "vite",

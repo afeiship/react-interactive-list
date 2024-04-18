@@ -150,6 +150,10 @@ npm install -S @jswork/react-interactive-list
   };
 
   ```
+3. import `global.d.ts`
+```ts
+/// <reference types="@jswork/react-interactive-list/global.d.ts" />
+```
 
 ## preview
 - https://afeiship.github.io/react-interactive-list/

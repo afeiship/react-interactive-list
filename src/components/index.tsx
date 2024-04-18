@@ -17,13 +17,6 @@ type TemplateCallback = (
   cb: any
 ) => React.ReactNode;
 
-// @ts-ignore
-interface NxStatic {
-  $ilist: {
-    event: ReactInteractiveListEvent;
-  }
-}
-
 export type ReactInteractiveListProps = {
   /**
    * The extended className for component.
