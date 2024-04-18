@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReactInteractiveList from '../../src/main';
 import styled from 'styled-components';
-import '@jswork/next';;
+import '@jswork/next';
 
 const messages = [
   'I wondered why the baseball was getting bigger. Then it hit me.',
@@ -18,9 +18,18 @@ const messages = [
 const Container = styled.div`
   width: 80%;
   margin: 30px auto 0;
+  
   button {
     margin-right: 10px;
   }
+
+  .actions{
+    margin-bottom: 10px;
+    background-color: #eee;
+    padding: 6px 12px;
+    border-radius: 4px;
+  }
+  
   .react-list {
     border: 1px solid #ddd;
     background-color: #f9f9f9;
@@ -78,7 +87,29 @@ export default () => {
 
   return (
     <Container>
+      <nav className='actions'>
+        <button
+          onClick={() => {
+            nx.$ilist.event.emit('i1:add');
+          }}>
+          Add
+        </button>
+        <button
+          onClick={() => {
+            nx.$ilist.event.emit('i1:remove', 0);
+          }}>
+          Remove 0
+        </button>
+        <button
+          onClick={() => {
+            nx.$ilist.event.emit('i1:clear');
+          }}>
+          Empty
+        </button>
+      </nav>
+
       <ReactInteractiveList
+        name="i1"
         harmony
         reverse
         listProps={{ className: 'react-list-x', as: 'section' }}

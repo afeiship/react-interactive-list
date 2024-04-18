@@ -6,8 +6,10 @@ import fdp from 'fast-deep-equal';
 import EventMitt, { EventMittNamespace } from '@jswork/event-mitt';
 
 const CLASS_NAME = 'react-interactive-list';
-const eventBus = Object.assign({}, EventMitt) as EventMittNamespace.EventMitt;
+const genid = ()=>Math.random().toString(36).substring(2);
+const eventBus = Object.assign({}, EventMitt) as ReactInteractiveListEvent;
 
+type ReactInteractiveListEvent = EventMittNamespace.EventMitt
 type StdEventTarget = { target: { value: any } };
 type StdCallback = (inEvent: StdEventTarget) => void;
 type TemplateCallback = (
@@ -17,7 +19,9 @@ type TemplateCallback = (
 
 // @ts-ignore
 interface NxStatic {
-  $ilist: typeof ReactInteractiveList;
+  $ilist: {
+    event: ReactInteractiveListEvent;
+  }
 }
 
 export type ReactInteractiveListProps = {
@@ -25,6 +29,10 @@ export type ReactInteractiveListProps = {
    * The extended className for component.
    */
   className?: string;
+  /**
+   * The identity name.
+   */
+  name?: string;
   /**
    * If use harmony mode.
    */
@@ -80,7 +88,6 @@ interface ReactInteractiveListState {
 }
 
 class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInteractiveListState> {
-  static event = eventBus;
   static displayName = CLASS_NAME;
   static defaultProps = {
     harmony: false,
@@ -94,6 +101,9 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     onError: noop,
     reverse: false,
   };
+
+  public event: ReactInteractiveListEvent;
+  public name: string;
 
   get length() {
     const { value } = this.state;
@@ -139,16 +149,20 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const { items, harmony } = inProps;
     const ctx = window['nx'];
 
+    this.name = inProps.name || genid();
     this.state = { value: [...items] };
+    this.event = Object.assign({}, EventMitt) as ReactInteractiveListEvent;
 
     //event bus
-    eventBus.on('add', this.add);
-    eventBus.on('remove', this.remove);
-    eventBus.on('set', this.set);
-    eventBus.on('clear', this.clear);
+    eventBus.on(`${this.name}:add`, this.add);
+    eventBus.on(`${this.name}:remove`, this.remove);
+    eventBus.on(`${this.name}:set`, this.set);
+    eventBus.on(`${this.name}:clear`, this.clear);
 
     // detect harmony
-    if (ctx && harmony) ctx.$ilist = ReactInteractiveList;
+    if (ctx && harmony) {
+      ctx.set(ctx, `$ilist.event`, eventBus);
+    }
   }
 
   /* ----- public eventBus methods ----- */
@@ -161,7 +175,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     this.handleChange(_value);
   };
 
-  remove = (inIndex) => {
+  remove = (inIndex: number) => {
     const { value } = this.state;
     const _value = value.slice(0);
     if (this.isLteMin) return;
@@ -169,7 +183,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     this.handleChange(_value);
   };
 
-  set = (inValue) => {
+  set = (inValue: any[]) => {
     this.handleChange(inValue);
   };
 
@@ -188,10 +202,10 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   }
 
   componentWillUnmount() {
-    eventBus.off('add', this.add);
-    eventBus.off('remove', this.remove);
-    eventBus.off('set', this.set);
-    eventBus.off('clear', this.clear);
+    eventBus.off(`${this.name}:add`, this.add);
+    eventBus.off(`${this.name}:remove`, this.remove);
+    eventBus.off(`${this.name}:set`, this.set);
+    eventBus.off(`${this.name}:clear`, this.clear);
   }
 
   template = ({ item, index }) => {
