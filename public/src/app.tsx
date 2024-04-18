@@ -80,8 +80,8 @@ export default () => {
     <Container>
       <ReactInteractiveList
         harmony
-        wrapped
         reverse
+        listProps={{ className: 'react-list-x', as: 'section' }}
         items={items}
         template={template}
         templateCreate={templateCreate}

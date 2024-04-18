@@ -1,5 +1,5 @@
 import noop from '@jswork/noop';
-import ReactList from '@jswork/react-list';
+import ReactList, { ReactListProps} from '@jswork/react-list';
 import cx from 'classnames';
 import React, { Component, HTMLAttributes } from 'react';
 import fdp from 'fast-deep-equal';
@@ -70,9 +70,9 @@ export type ReactInteractiveListProps = {
    */
   reverse?: boolean;
   /**
-   * If wraped list with div.
+   * The props for react-list.
    */
-  wrapped?: boolean;
+  listProps?: ReactListProps;
 } & HTMLAttributes<any>;
 
 interface ReactInteractiveListState {
@@ -93,7 +93,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     onChange: noop,
     onError: noop,
     reverse: false,
-    wrapped: false
   };
 
   get length() {
@@ -113,13 +112,13 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   get listView() {
     const { value } = this.state;
-    const { wrapped } = this.props;
-    const listProps = {
-      as: wrapped ? 'div' : React.Fragment,
+    const { listProps } = this.props;
+    const props = {
       items: value,
-      template: this.template
+      template: this.template,
+      ...listProps
     };
-    return <ReactList {...listProps} />;
+    return <ReactList {...props} />;
   }
 
   get createView() {
@@ -139,7 +138,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     super(inProps);
     const { items, harmony } = inProps;
     const ctx = window['nx'];
-    
+
     this.state = { value: [...items] };
 
     //event bus
@@ -176,7 +175,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   clear = () => {
     this.handleChange([]);
-  }
+  };
   /* ----- public eventBus methods ----- */
 
   shouldComponentUpdate(inProps: ReactInteractiveListProps) {
@@ -210,8 +209,8 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const {
       className,
       harmony,
-      wrapped,
       reverse,
+      listProps,
       forwardedRef,
       min,
       max,
