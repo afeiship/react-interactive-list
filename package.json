@@ -8,7 +8,7 @@
   "typings": "dist/main.d.ts",
   "files": [
     "dist",
-    "globals.d.ts"
+    "global.d.ts"
   ],
   "scripts": {
     "dev": "vite",
