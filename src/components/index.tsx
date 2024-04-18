@@ -3,8 +3,10 @@ import ReactList from '@jswork/react-list';
 import cx from 'classnames';
 import React, { Component, HTMLAttributes } from 'react';
 import fdp from 'fast-deep-equal';
+import EventMitt, { EventMittNamespace } from '@jswork/event-mitt';
 
 const CLASS_NAME = 'react-interactive-list';
+const eventBus = Object.assign({}, EventMitt) as EventMittNamespace.EventMitt;
 
 type StdEventTarget = { target: { value: any } };
 type StdCallback = (inEvent: StdEventTarget) => void;
@@ -13,11 +15,20 @@ type TemplateCallback = (
   cb: any
 ) => React.ReactNode;
 
+// @ts-ignore
+interface NxStatic {
+  $ilist: typeof ReactInteractiveList;
+}
+
 export type ReactInteractiveListProps = {
   /**
    * The extended className for component.
    */
   className?: string;
+  /**
+   * If use harmony mode.
+   */
+  harmony?: boolean;
   /**
    * The minimum size.
    */
@@ -69,8 +80,10 @@ interface ReactInteractiveListState {
 }
 
 class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInteractiveListState> {
+  static event = eventBus;
   static displayName = CLASS_NAME;
   static defaultProps = {
+    harmony: false,
     min: 0,
     max: 100,
     items: [],
@@ -111,14 +124,9 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   get createView() {
     const { value } = this.state;
-    const { templateCreate, templateDefault } = this.props;
+    const { templateCreate } = this.props;
     const _value = value.slice(0);
-    const cb = () => {
-      if (this.isGteMax) return;
-      _value.push(templateDefault());
-      this.handleChange(_value);
-    };
-    return templateCreate({ items: _value }, cb);
+    return templateCreate({ items: _value }, this.add);
   }
 
   get calcChildView() {
@@ -129,9 +137,47 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   constructor(inProps: ReactInteractiveListProps) {
     super(inProps);
-    const { items } = inProps;
+    const { items, harmony } = inProps;
+    const ctx = window['nx'];
+    
     this.state = { value: [...items] };
+
+    //event bus
+    eventBus.on('add', this.add);
+    eventBus.on('remove', this.remove);
+    eventBus.on('set', this.set);
+    eventBus.on('clear', this.clear);
+
+    // detect harmony
+    if (ctx && harmony) ctx.$ilist = ReactInteractiveList;
   }
+
+  /* ----- public eventBus methods ----- */
+  add = () => {
+    const { value } = this.state;
+    const { templateDefault } = this.props;
+    const _value = value.slice(0);
+    if (this.isGteMax) return;
+    _value.push(templateDefault());
+    this.handleChange(_value);
+  };
+
+  remove = (inIndex) => {
+    const { value } = this.state;
+    const _value = value.slice(0);
+    if (this.isLteMin) return;
+    _value.splice(inIndex, 1);
+    this.handleChange(_value);
+  };
+
+  set = (inValue) => {
+    this.handleChange(inValue);
+  };
+
+  clear = () => {
+    this.handleChange([]);
+  }
+  /* ----- public eventBus methods ----- */
 
   shouldComponentUpdate(inProps: ReactInteractiveListProps) {
     const { items } = inProps;
@@ -146,11 +192,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const { template } = this.props;
     const { value } = this.state;
     const _value = value.slice();
-    const cb = () => {
-      if (this.isLteMin) return;
-      _value.splice(index, 1);
-      this.handleChange(_value);
-    };
+    const cb = () => this.remove(index);
     return template({ item, index, items: _value }, cb);
   };
 
@@ -164,13 +206,10 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     });
   };
 
-  notify = (inValue) => {
-    this.handleChange(inValue);
-  };
-
   render() {
     const {
       className,
+      harmony,
       wrapped,
       reverse,
       forwardedRef,

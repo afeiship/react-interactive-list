@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ReactInteractiveList from '../../src/main';
 import styled from 'styled-components';
+import '@jswork/next';;
 
 const messages = [
   'I wondered why the baseball was getting bigger. Then it hit me.',
@@ -78,6 +79,7 @@ export default () => {
   return (
     <Container>
       <ReactInteractiveList
+        harmony
         wrapped
         reverse
         items={items}

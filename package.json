@@ -71,6 +71,7 @@
     "vite-plugin-pwa": "^0.7.3"
   },
   "dependencies": {
+    "@jswork/event-mitt": "^1.0.13",
     "@jswork/noop": "^1.0.0",
     "@jswork/react-list": "^1.2.2",
     "classnames": "^2.2.6",
