@@ -1,15 +1,15 @@
 import noop from '@jswork/noop';
-import ReactList, { ReactListProps} from '@jswork/react-list';
+import ReactList, { ReactListProps } from '@jswork/react-list';
 import cx from 'classnames';
 import React, { Component, HTMLAttributes } from 'react';
 import fdp from 'fast-deep-equal';
 import EventMitt, { EventMittNamespace } from '@jswork/event-mitt';
 
 const CLASS_NAME = 'react-interactive-list';
-const genid = ()=>Math.random().toString(36).substring(2);
+const genid = () => Math.random().toString(36).substring(2);
 const eventBus = Object.assign({}, EventMitt) as ReactInteractiveListEvent;
 
-type ReactInteractiveListEvent = EventMittNamespace.EventMitt
+type ReactInteractiveListEvent = EventMittNamespace.EventMitt;
 type StdEventTarget = { target: { value: any } };
 type StdCallback = (inEvent: StdEventTarget) => void;
 type TemplateCallback = (
@@ -92,10 +92,9 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     templateDefault: noop,
     onChange: noop,
     onError: noop,
-    reverse: false,
+    reverse: false
   };
 
-  public event: ReactInteractiveListEvent;
   public name: string;
 
   get length() {
@@ -144,7 +143,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
     this.name = inProps.name || genid();
     this.state = { value: [...items] };
-    this.event = Object.assign({}, EventMitt) as ReactInteractiveListEvent;
 
     //event bus
     eventBus.on(`${this.name}:add`, this.add);
