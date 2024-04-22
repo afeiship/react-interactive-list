@@ -6,7 +6,6 @@ import fdp from 'fast-deep-equal';
 import EventMitt, { EventMittNamespace } from '@jswork/event-mitt';
 
 const CLASS_NAME = 'react-interactive-list';
-const genid = () => Math.random().toString(36).substring(2);
 const eventBus = Object.assign({}, EventMitt) as ReactInteractiveListEvent;
 
 type ReactInteractiveListEvent = EventMittNamespace.EventMitt;
@@ -83,6 +82,7 @@ interface ReactInteractiveListState {
 class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInteractiveListState> {
   static displayName = CLASS_NAME;
   static defaultProps = {
+    name: '@',
     harmony: false,
     min: 0,
     max: 100,
@@ -94,8 +94,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     onError: noop,
     reverse: false
   };
-
-  public name: string;
 
   get length() {
     const { value } = this.state;
@@ -138,17 +136,16 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   constructor(inProps: ReactInteractiveListProps) {
     super(inProps);
-    const { items, harmony } = inProps;
+    const { items, harmony, name } = inProps;
     const ctx = window['nx'];
 
-    this.name = inProps.name || genid();
     this.state = { value: [...items] };
 
     //event bus
-    eventBus.on(`${this.name}:add`, this.add);
-    eventBus.on(`${this.name}:remove`, this.remove);
-    eventBus.on(`${this.name}:set`, this.set);
-    eventBus.on(`${this.name}:clear`, this.clear);
+    eventBus.on(`${name}:add`, this.add);
+    eventBus.on(`${name}:remove`, this.remove);
+    eventBus.on(`${name}:set`, this.set);
+    eventBus.on(`${name}:clear`, this.clear);
 
     // detect harmony
     if (ctx && harmony) {
@@ -181,6 +178,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   clear = () => {
     this.handleChange([]);
   };
+
   /* ----- public eventBus methods ----- */
 
   shouldComponentUpdate(inProps: ReactInteractiveListProps) {
@@ -193,10 +191,11 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   }
 
   componentWillUnmount() {
-    eventBus.off(`${this.name}:add`, this.add);
-    eventBus.off(`${this.name}:remove`, this.remove);
-    eventBus.off(`${this.name}:set`, this.set);
-    eventBus.off(`${this.name}:clear`, this.clear);
+    const { name } = this.props;
+    eventBus.off(`${name}:add`, this.add);
+    eventBus.off(`${name}:remove`, this.remove);
+    eventBus.off(`${name}:set`, this.set);
+    eventBus.off(`${name}:clear`, this.clear);
   }
 
   template = ({ item, index }) => {
