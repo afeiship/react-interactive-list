@@ -146,6 +146,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     eventBus.on(`${name}:remove`, this.remove);
     eventBus.on(`${name}:set`, this.set);
     eventBus.on(`${name}:clear`, this.clear);
+    eventBus.on(`${name}:notify`, this.notify);
 
     // detect harmony
     if (ctx && harmony) {
@@ -179,6 +180,11 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     this.handleChange([]);
   };
 
+  notify = ()=>{
+    const { value } = this.state;
+    this.handleChange(value);
+  };
+
   /* ----- public eventBus methods ----- */
 
   shouldComponentUpdate(inProps: ReactInteractiveListProps) {
@@ -196,6 +202,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     eventBus.off(`${name}:remove`, this.remove);
     eventBus.off(`${name}:set`, this.set);
     eventBus.off(`${name}:clear`, this.clear);
+    eventBus.off(`${name}:notify`, this.notify);
   }
 
   template = ({ item, index }) => {
