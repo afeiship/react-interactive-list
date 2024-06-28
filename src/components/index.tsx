@@ -251,6 +251,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       reverse,
       listProps,
       forwardedRef,
+      initial,
       min,
       max,
       items,
