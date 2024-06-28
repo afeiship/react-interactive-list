@@ -1,12 +1,12 @@
 import noop from '@jswork/noop';
-import ReactList, { ReactListProps} from '@jswork/react-list';
+import ReactList, { ReactListProps } from '@jswork/react-list';
 import cx from 'classnames';
 import React, { Component, HTMLAttributes } from 'react';
 import fdp from 'fast-deep-equal';
 import EventMitt, { EventMittNamespace } from '@jswork/event-mitt';
 
 const CLASS_NAME = 'react-interactive-list';
-const genid = ()=>Math.random().toString(36).substring(2);
+const genid = () => Math.random().toString(36).substring(2);
 const eventBus = Object.assign({}, EventMitt) as ReactInteractiveListEvent;
 
 type ReactInteractiveListEvent = EventMittNamespace.EventMitt
@@ -30,6 +30,10 @@ export type ReactInteractiveListProps = {
    * If use harmony mode.
    */
   harmony?: boolean;
+  /**
+   * The initial count.
+   */
+  initial?: number;
   /**
    * The minimum size.
    */
@@ -84,6 +88,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   static displayName = CLASS_NAME;
   static defaultProps = {
     harmony: false,
+    initial: 1,
     min: 0,
     max: 100,
     items: [],
@@ -92,7 +97,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     templateDefault: noop,
     onChange: noop,
     onError: noop,
-    reverse: false,
+    reverse: false
   };
 
   public event: ReactInteractiveListEvent;
@@ -158,6 +163,18 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     }
   }
 
+  private checkInitialCount = () => {
+    const { initial } = this.props;
+    const { value } = this.state;
+    if (value.length < initial!) {
+      const _value = value.slice(0);
+      for (let i = 0; i < initial! - value.length; i++) {
+        _value.push(this.props.templateDefault());
+      }
+      this.handleChange(_value);
+    }
+  };
+
   /* ----- public eventBus methods ----- */
   add = () => {
     const { value } = this.state;
@@ -183,6 +200,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   clear = () => {
     this.handleChange([]);
   };
+
   /* ----- public eventBus methods ----- */
 
   shouldComponentUpdate(inProps: ReactInteractiveListProps) {
@@ -199,6 +217,10 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     eventBus.off(`${this.name}:remove`, this.remove);
     eventBus.off(`${this.name}:set`, this.set);
     eventBus.off(`${this.name}:clear`, this.clear);
+  }
+
+  componentDidMount() {
+    this.checkInitialCount();
   }
 
   template = ({ item, index }) => {
@@ -226,6 +248,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       reverse,
       listProps,
       forwardedRef,
+      initial,
       min,
       max,
       items,
