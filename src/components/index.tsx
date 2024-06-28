@@ -30,6 +30,10 @@ export type ReactInteractiveListProps = {
    */
   harmony?: boolean;
   /**
+   * The initial size.
+   */
+  initial?: number;
+  /**
    * The minimum size.
    */
   min: number;
@@ -84,6 +88,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   static defaultProps = {
     name: '@',
     harmony: false,
+    initial: 0,
     min: 0,
     max: 100,
     items: [],
@@ -154,6 +159,18 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     }
   }
 
+  private checkInitial = () => {
+    const { initial } = this.props;
+    const { value } = this.state;
+    if (value.length < initial!) {
+      const _value = value.slice(0);
+      for (let i = 0; i < initial! - value.length; i++) {
+        _value.push(this.props.templateDefault());
+      }
+      this.handleChange(_value);
+    }
+  };
+
   /* ----- public eventBus methods ----- */
   add = () => {
     const { value } = this.state;
@@ -180,7 +197,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     this.handleChange([]);
   };
 
-  notify = ()=>{
+  notify = () => {
     const { value } = this.state;
     this.handleChange(value);
   };
@@ -194,6 +211,10 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       this.setState({ value: [...items] });
     }
     return true;
+  }
+
+  componentDidMount() {
+    this.checkInitial();
   }
 
   componentWillUnmount() {

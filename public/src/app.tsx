@@ -16,45 +16,49 @@ const messages = [
 ].map((message, index) => ({ message, index, id: `id_${index}` }));
 
 const Container = styled.div`
-  width: 80%;
-  margin: 30px auto 0;
-  
-  button {
-    margin-right: 10px;
-  }
+    width: 80%;
+    margin: 30px auto 0;
 
-  .actions{
-    margin-bottom: 10px;
-    background-color: #eee;
-    padding: 6px 12px;
-    border-radius: 4px;
-  }
-  
-  .react-list {
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
-    border-radius: 3px;
-    margin: 4px auto;
-    transition: background-color 0.3s;
-    &:hover {
-      background-color: #f0f0f0;
+    button {
+        margin-right: 10px;
     }
-  }
-  .message {
-    border-radius: 1em;
-    padding: 6px 12px;
-    margin: 0.5em;
-    line-height: 1.1em;
-    background-color: lightblue;
-    transition: background-color 0.3s;
-    &:hover {
-      background-color: lightcoral;
+
+    .actions {
+        margin-bottom: 10px;
+        background-color: #eee;
+        padding: 6px 12px;
+        border-radius: 4px;
     }
-  }
+
+    .react-list {
+        border: 1px solid #ddd;
+        background-color: #f9f9f9;
+        border-radius: 3px;
+        margin: 4px auto;
+        transition: background-color 0.3s;
+
+        &:hover {
+            background-color: #f0f0f0;
+        }
+    }
+
+    .message {
+        border-radius: 1em;
+        padding: 6px 12px;
+        margin: 0.5em;
+        line-height: 1.1em;
+        background-color: lightblue;
+        transition: background-color 0.3s;
+
+        &:hover {
+            background-color: lightcoral;
+        }
+    }
 `;
 
 export default () => {
   const [items, setItems] = useState(messages);
+  const [items2, setItems2] = useState([]);
 
   const template = ({ item, index }, cb) => {
     const idx = index + 1;
@@ -81,13 +85,18 @@ export default () => {
 
   const handleChange = (e) => {
     const { value } = e.target;
-    console.log('current items: ', value);
     setItems(value);
+  };
+
+  const handleChange2 = (e) => {
+    const { value } = e.target;
+    console.log('current items: ', value);
+    setItems2(value);
   };
 
   return (
     <Container>
-      <nav className='actions'>
+      <nav className="actions">
         <button
           onClick={() => {
             nx.$ilist.event.emit('i1:add');
@@ -107,7 +116,6 @@ export default () => {
           Empty
         </button>
       </nav>
-
       <ReactInteractiveList
         name="i1"
         harmony
@@ -118,6 +126,18 @@ export default () => {
         templateCreate={templateCreate}
         templateDefault={templateDefault}
         onChange={handleChange}
+      />
+      <ReactInteractiveList
+        name="i1"
+        initial={3}
+        harmony
+        reverse
+        listProps={{ className: 'react-list-x', as: 'section' }}
+        items={items2}
+        template={template}
+        templateCreate={templateCreate}
+        templateDefault={templateDefault}
+        onChange={handleChange2}
       />
     </Container>
   );
