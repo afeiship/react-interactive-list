@@ -150,6 +150,8 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     eventBus.on(`${name}:add`, this.add);
     eventBus.on(`${name}:remove`, this.remove);
     eventBus.on(`${name}:set`, this.set);
+    eventBus.on(`${name}:up`, this.up);
+    eventBus.on(`${name}:down`, this.down);
     eventBus.on(`${name}:clear`, this.clear);
     eventBus.on(`${name}:notify`, this.notify);
 
@@ -193,6 +195,26 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     this.handleChange(inValue);
   };
 
+  up = (inIndex: number) => {
+    const { value } = this.state;
+    const _value = value.slice(0);
+    if (inIndex === 0) return;
+    const temp = _value[inIndex - 1];
+    _value[inIndex - 1] = _value[inIndex];
+    _value[inIndex] = temp;
+    this.handleChange(_value);
+  };
+
+  down = (inIndex: number) => {
+    const { value } = this.state;
+    const _value = value.slice(0);
+    if (inIndex === _value.length - 1) return;
+    const temp = _value[inIndex + 1];
+    _value[inIndex + 1] = _value[inIndex];
+    _value[inIndex] = temp;
+    this.handleChange(_value);
+  };
+
   clear = () => {
     this.handleChange([]);
   };
@@ -222,6 +244,8 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     eventBus.off(`${name}:add`, this.add);
     eventBus.off(`${name}:remove`, this.remove);
     eventBus.off(`${name}:set`, this.set);
+    eventBus.off(`${name}:up`, this.up);
+    eventBus.off(`${name}:down`, this.down);
     eventBus.off(`${name}:clear`, this.clear);
     eventBus.off(`${name}:notify`, this.notify);
   }
