@@ -84,13 +84,18 @@ npm install -S @jswork/react-interactive-list
 
   export default () => {
     const [items, setItems] = useState(messages);
-    const [items2, setItems2] = useState([]);
+    const [items2, setItems2] = useState([...messages.slice(0, 3)]);
 
     const template = ({ item, index }, cb) => {
       const idx = index + 1;
       return (
         <div className="message" key={item.id}>
-          <button onClick={cb}>DELETE</button>
+          <nav>
+            <button onClick={cb}>DELETE</button>
+            <button disabled={index === 0} onClick={() => nx.$ilist.event.emit('i2:up', index)}>Up</button>
+            <button disabled={index === items.length - 1} onClick={() => nx.$ilist.event.emit('i2:down', index)}>Down
+            </button>
+          </nav>
           <span>
             {idx}.{item.message}
           </span>
@@ -116,7 +121,6 @@ npm install -S @jswork/react-interactive-list
 
     const handleChange2 = (e) => {
       const { value } = e.target;
-      console.log('current items: ', value);
       setItems2(value);
     };
 
@@ -154,7 +158,7 @@ npm install -S @jswork/react-interactive-list
           onChange={handleChange}
         />
         <ReactInteractiveList
-          name="i1"
+          name="i2"
           initial={3}
           harmony
           reverse
