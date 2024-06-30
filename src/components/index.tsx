@@ -49,13 +49,9 @@ export type ReactInteractiveListProps = {
    */
   template: TemplateCallback;
   /**
-   * The action of `create` component.
-   */
-  templateCreate: (...args) => React.ReactNode;
-  /**
    * The empty create template.
    */
-  templateDefault: () => React.ReactNode;
+  defaults: () => any;
   /**
    * The change handler.
    */
@@ -68,10 +64,6 @@ export type ReactInteractiveListProps = {
    * Forwards a ref to the underlying div element.
    */
   forwardedRef: any;
-  /**
-   * The children reverse order.
-   */
-  reverse?: boolean;
   /**
    * The props for react-list.
    */
@@ -92,11 +84,9 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     max: 100,
     value: [],
     template: noop,
-    templateCreate: noop,
-    templateDefault: noop,
+    defaults: noop,
     onChange: noop,
-    onError: noop,
-    reverse: false
+    onError: noop
   };
 
   get length() {
@@ -123,19 +113,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       ...listProps
     };
     return <ReactList {...props} />;
-  }
-
-  get createView() {
-    const { value } = this.state;
-    const { templateCreate } = this.props;
-    const _value = value.slice(0);
-    return templateCreate({ items: _value }, this.add);
-  }
-
-  get calcChildView() {
-    const { reverse } = this.props;
-    const items = reverse ? [this.createView, this.listView] : [this.listView, this.createView];
-    return React.Children.map(items, (item) => item);
   }
 
   constructor(inProps: ReactInteractiveListProps) {
@@ -167,7 +144,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     if (value.length < initial) {
       const _value = value.slice(0);
       for (let i = 0; i < initial - value.length; i++) {
-        _value.push(this.props.templateDefault());
+        _value.push(this.props.defaults());
       }
       this.handleChange(_value);
     }
@@ -176,10 +153,10 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   /* ----- public eventBus methods ----- */
   add = () => {
     const { value } = this.state;
-    const { templateDefault } = this.props;
+    const { defaults } = this.props;
     const _value = value.slice(0);
     if (this.isGteMax) return;
-    _value.push(templateDefault());
+    _value.push(defaults());
     this.handleChange(_value);
   };
 
@@ -225,15 +202,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   };
 
   /* ----- public eventBus methods ----- */
-
-  // shouldComponentUpdate(nextProps: ReactInteractiveListProps) {
-  //   const { value } = nextProps;
-  //   const isEqual = fdp(this.state.value, value);
-  //   if (!isEqual) {
-  //     this.setState({ value: [...value] });
-  //   }
-  //   return true;
-  // }
 
   componentDidUpdate() {
     const { value, onChange } = this.props;
@@ -282,7 +250,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const {
       className,
       harmony,
-      reverse,
       listProps,
       forwardedRef,
       initial,
@@ -290,8 +257,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       max,
       value,
       template,
-      templateCreate,
-      templateDefault,
+      defaults,
       onChange,
       onError,
       ...props
@@ -299,7 +265,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
     return (
       <div className={cx(CLASS_NAME, className)} ref={forwardedRef} {...props}>
-        {this.calcChildView}
+        {this.listView}
       </div>
     );
   }

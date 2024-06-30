@@ -77,11 +77,7 @@ export default () => {
     );
   };
 
-  const templateCreate = (_, cb) => {
-    return <button onClick={cb}>Create</button>;
-  };
-
-  const templateDefault = () => {
+  const defaults = () => {
     return {
       message: 'New items',
       id: `id_${Math.random()}`
@@ -121,24 +117,21 @@ export default () => {
       <ReactInteractiveList
         name="i1"
         harmony
-        reverse
         listProps={{ className: 'react-list-x', as: 'section' }}
         value={items}
         template={template}
-        templateCreate={templateCreate}
-        templateDefault={templateDefault}
+        defaults={defaults}
         onChange={handleChange}
       />
+      <hr />
       <ReactInteractiveList
         name="i2"
         initial={3}
         harmony
-        reverse
         listProps={{ className: 'react-list-x', as: 'section' }}
         value={items2}
         template={template}
-        templateCreate={templateCreate}
-        templateDefault={templateDefault}
+        defaults={defaults}
         onChange={handleChange2}
       />
     </Container>
