@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactInteractiveList from '../../src/main';
 import styled from 'styled-components';
 import '@jswork/next';
@@ -59,6 +59,7 @@ const Container = styled.div`
 export default () => {
   const [items, setItems] = useState(messages);
   const [items2, setItems2] = useState([...messages.slice(0, 3)]);
+  const ref1 = useRef(null);
 
   const template = ({ item, index }, cb) => {
     const idx = index + 1;
@@ -92,6 +93,10 @@ export default () => {
     setItems2(value);
   };
 
+  useEffect(() => {
+    window['ref1'] = ref1;
+  }, []);
+
   return (
     <Container>
       <nav className="actions">
@@ -116,6 +121,7 @@ export default () => {
       </nav>
       <ReactInteractiveList
         name="i1"
+        ref={ref1}
         harmony
         listProps={{ className: 'react-list-x', as: 'section' }}
         value={items}
