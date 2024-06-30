@@ -138,13 +138,13 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   }
 
   private checkInitial = () => {
-    const { initial } = this.props;
+    const { initial, defaults } = this.props;
     const { value } = this.state;
     if (!initial) return;
     if (value.length < initial) {
       const _value = value.slice(0);
       for (let i = 0; i < initial - value.length; i++) {
-        _value.push(this.props.defaults());
+        _value.push(defaults());
       }
       this.handleChange(_value);
     }
@@ -212,7 +212,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       onChange?.(value);
     }
   }
-
 
   componentDidMount() {
     this.checkInitial();
