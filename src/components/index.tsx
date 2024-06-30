@@ -76,7 +76,7 @@ export type ReactInteractiveListProps = {
    * The props for react-list.
    */
   listProps?: ReactListProps;
-} & HTMLAttributes<any>;
+} & HTMLAttributes<HTMLDivElement>;
 
 interface ReactInteractiveListState {
   value: any[];
@@ -226,14 +226,25 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   /* ----- public eventBus methods ----- */
 
-  shouldComponentUpdate(nextProps: ReactInteractiveListProps) {
-    const { value } = nextProps;
-    const isEqual = fdp(this.state.value, value);
-    if (!isEqual) {
-      this.setState({ value: [...value] });
+  // shouldComponentUpdate(nextProps: ReactInteractiveListProps) {
+  //   const { value } = nextProps;
+  //   const isEqual = fdp(this.state.value, value);
+  //   if (!isEqual) {
+  //     this.setState({ value: [...value] });
+  //   }
+  //   return true;
+  // }
+
+  componentDidUpdate() {
+    const { value, onChange } = this.props;
+    const { value: stateValue } = this.state;
+    const isEqual = fdp(value, stateValue);
+    if (value !== undefined && !isEqual) {
+      this.setState({ value });
+      onChange?.(value);
     }
-    return true;
   }
+
 
   componentDidMount() {
     this.checkInitial();
