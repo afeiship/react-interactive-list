@@ -93,7 +93,7 @@ npm install -S @jswork/react-interactive-list
           <nav>
             <button onClick={cb}>DELETE</button>
             <button disabled={index === 0} onClick={() => nx.$ilist.event.emit('i2:up', index)}>Up</button>
-            <button disabled={index === items.length - 1} onClick={() => nx.$ilist.event.emit('i2:down', index)}>Down
+            <button disabled={index === items2.length - 1} onClick={() => nx.$ilist.event.emit('i2:down', index)}>Down
             </button>
           </nav>
           <span>
@@ -114,13 +114,11 @@ npm install -S @jswork/react-interactive-list
       };
     };
 
-    const handleChange = (e) => {
-      const { value } = e.target;
+    const handleChange = (value) => {
       setItems(value);
     };
 
-    const handleChange2 = (e) => {
-      const { value } = e.target;
+    const handleChange2 = (value) => {
       setItems2(value);
     };
 
@@ -151,7 +149,7 @@ npm install -S @jswork/react-interactive-list
           harmony
           reverse
           listProps={{ className: 'react-list-x', as: 'section' }}
-          items={items}
+          value={items}
           template={template}
           templateCreate={templateCreate}
           templateDefault={templateDefault}
@@ -163,7 +161,7 @@ npm install -S @jswork/react-interactive-list
           harmony
           reverse
           listProps={{ className: 'react-list-x', as: 'section' }}
-          items={items2}
+          value={items2}
           template={template}
           templateCreate={templateCreate}
           templateDefault={templateDefault}
