@@ -9,8 +9,7 @@ const CLASS_NAME = 'react-interactive-list';
 const eventBus = Object.assign({}, EventMitt) as ReactInteractiveListEvent;
 
 type ReactInteractiveListEvent = EventMittNamespace.EventMitt;
-type StdEventTarget = { target: { value: any } };
-type StdCallback = (inEvent: StdEventTarget) => void;
+type StdCallback = (value: any) => void;
 type TemplateCallback = (
   item: { item: any; index: number; items: any[] },
   cb: any
@@ -44,7 +43,7 @@ export type ReactInteractiveListProps = {
   /**
    * The data source.
    */
-  items: any[];
+  value: any[];
   /**
    * The data item template.
    */
@@ -91,7 +90,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     initial: 0,
     min: 0,
     max: 100,
-    items: [],
+    value: [],
     template: noop,
     templateCreate: noop,
     templateDefault: noop,
@@ -141,10 +140,10 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   constructor(inProps: ReactInteractiveListProps) {
     super(inProps);
-    const { items, harmony, name } = inProps;
+    const { value, harmony, name } = inProps;
     const ctx = window['nx'];
 
-    this.state = { value: [...items] };
+    this.state = { value: [...value] };
 
     //event bus
     eventBus.on(`${name}:add`, this.add);
@@ -227,11 +226,11 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   /* ----- public eventBus methods ----- */
 
-  shouldComponentUpdate(inProps: ReactInteractiveListProps) {
-    const { items } = inProps;
-    const isEqual = fdp(this.state.value, items);
+  shouldComponentUpdate(nextProps: ReactInteractiveListProps) {
+    const { value } = nextProps;
+    const isEqual = fdp(this.state.value, value);
     if (!isEqual) {
-      this.setState({ value: [...items] });
+      this.setState({ value: [...value] });
     }
     return true;
   }
@@ -261,11 +260,10 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   handleChange = (inValue: any[]) => {
     const { onChange, onError, min, max } = this.props;
-    const target = { value: inValue };
-    this.setState(target, () => {
-      onChange({ target });
-      this.length < min && onError({ target: { value: 'EQ_MIN' } });
-      this.length > max && onError({ target: { value: 'EQ_MAX' } });
+    this.setState({ value: inValue }, () => {
+      onChange(inValue);
+      this.length < min && onError('EQ_MIN');
+      this.length > max && onError('EQ_MAX');
     });
   };
 
@@ -279,7 +277,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       initial,
       min,
       max,
-      items,
+      value,
       template,
       templateCreate,
       templateDefault,
