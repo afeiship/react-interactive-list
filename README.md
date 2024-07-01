@@ -24,7 +24,7 @@ npm install -S @jswork/react-interactive-list
   ```
 2. import js
   ```js
-  import React, { useState } from 'react';
+  import React, { useEffect, useRef, useState } from 'react';
   import ReactInteractiveList from '../../src/main';
   import styled from 'styled-components';
   import '@jswork/next';
@@ -85,6 +85,7 @@ npm install -S @jswork/react-interactive-list
   export default () => {
     const [items, setItems] = useState(messages);
     const [items2, setItems2] = useState([...messages.slice(0, 3)]);
+    const ref1 = useRef(null);
 
     const template = ({ item, index }, cb) => {
       const idx = index + 1;
@@ -118,6 +119,10 @@ npm install -S @jswork/react-interactive-list
       setItems2(value);
     };
 
+    useEffect(() => {
+      window['ref1'] = ref1;
+    }, []);
+
     return (
       <Container>
         <nav className="actions">
@@ -142,6 +147,7 @@ npm install -S @jswork/react-interactive-list
         </nav>
         <ReactInteractiveList
           name="i1"
+          ref={ref1}
           harmony
           listProps={{ className: 'react-list-x', as: 'section' }}
           value={items}
