@@ -1,7 +1,7 @@
 {
   "name": "@jswork/react-interactive-list",
   "homepage": "https://js.work",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "React interactive-list.",
   "license": "MIT",
   "main": "dist/index.js",
@@ -73,7 +73,6 @@
   },
   "dependencies": {
     "@jswork/harmony-events": "^1.0.7",
-    "@jswork/noop": "^1.0.0",
     "@jswork/react-list": "^1.2.3",
     "classnames": "^2.2.6",
     "fast-deep-equal": "^3.1.3"
