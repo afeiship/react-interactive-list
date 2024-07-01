@@ -1,14 +1,12 @@
-import noop from '@jswork/noop';
 import ReactList, { ReactListProps } from '@jswork/react-list';
 import cx from 'classnames';
 import React, { Component, HTMLAttributes } from 'react';
 import fdp from 'fast-deep-equal';
-import EventMitt, { EventMittNamespace } from '@jswork/event-mitt';
+import HarmonyEvents from '@jswork/harmony-events';
 
 const CLASS_NAME = 'react-interactive-list';
-const eventBus = Object.assign({}, EventMitt) as ReactInteractiveListEvent;
+const HE_EVENTS = ['add', 'remove', 'set', 'up', 'down', 'clear', 'notify'];
 
-type ReactInteractiveListEvent = EventMittNamespace.EventMitt;
 type StdCallback = (value: any) => void;
 type TemplateCallback = (
   item: { item: any; index: number; items: any[] },
@@ -51,15 +49,15 @@ export type ReactInteractiveListProps = {
   /**
    * The empty create template.
    */
-  defaults: () => any;
+  defaults?: () => any;
   /**
    * The change handler.
    */
-  onChange: StdCallback;
+  onChange?: StdCallback;
   /**
    * When trigger max/min boundary.
    */
-  onError: StdCallback;
+  onError?: StdCallback;
   /**
    * Forwards a ref to the underlying div element.
    */
@@ -75,6 +73,7 @@ interface ReactInteractiveListState {
 }
 
 class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInteractiveListState> {
+  private harmonyEvents: HarmonyEvents | null = null;
   static displayName = CLASS_NAME;
   static defaultProps = {
     name: '@',
@@ -82,11 +81,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     initial: 0,
     min: 0,
     max: 100,
-    value: [],
-    template: noop,
-    defaults: noop,
-    onChange: noop,
-    onError: noop
+    value: []
   };
 
   get length() {
@@ -118,23 +113,12 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   constructor(inProps: ReactInteractiveListProps) {
     super(inProps);
     const { value, harmony, name } = inProps;
-    const ctx = window['nx'];
 
     this.state = { value: [...value] };
-
-    //event bus
-    eventBus.on(`${name}:add`, this.add);
-    eventBus.on(`${name}:remove`, this.remove);
-    eventBus.on(`${name}:set`, this.set);
-    eventBus.on(`${name}:up`, this.up);
-    eventBus.on(`${name}:down`, this.down);
-    eventBus.on(`${name}:clear`, this.clear);
-    eventBus.on(`${name}:notify`, this.notify);
-
-    // detect harmony
-    if (ctx && harmony) {
-      ctx.set(ctx, `$ilist.event`, eventBus);
-    }
+    this.harmonyEvents = new HarmonyEvents({
+      harmony, name, context: this,
+      ns: '$ilist', items: HE_EVENTS
+    });
   }
 
   private checkInitial = () => {
@@ -144,7 +128,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     if (value.length < initial) {
       const _value = value.slice(0);
       for (let i = 0; i < initial - value.length; i++) {
-        _value.push(defaults());
+        _value.push(defaults?.());
       }
       this.handleChange(_value);
     }
@@ -156,7 +140,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const { defaults } = this.props;
     const _value = value.slice(0);
     if (this.isGteMax) return;
-    _value.push(defaults());
+    _value.push(defaults?.());
     this.handleChange(_value);
   };
 
@@ -218,14 +202,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   }
 
   componentWillUnmount() {
-    const { name } = this.props;
-    eventBus.off(`${name}:add`, this.add);
-    eventBus.off(`${name}:remove`, this.remove);
-    eventBus.off(`${name}:set`, this.set);
-    eventBus.off(`${name}:up`, this.up);
-    eventBus.off(`${name}:down`, this.down);
-    eventBus.off(`${name}:clear`, this.clear);
-    eventBus.off(`${name}:notify`, this.notify);
+    this.harmonyEvents?.off();
   }
 
   template = ({ item, index }) => {
@@ -239,9 +216,9 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   handleChange = (inValue: any[]) => {
     const { onChange, onError, min, max } = this.props;
     this.setState({ value: inValue }, () => {
-      onChange(inValue);
-      this.length < min && onError('EQ_MIN');
-      this.length > max && onError('EQ_MAX');
+      onChange?.(inValue);
+      this.length < min && onError?.('EQ_MIN');
+      this.length > max && onError?.('EQ_MAX');
     });
   };
 
@@ -249,6 +226,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const {
       className,
       harmony,
+      name,
       listProps,
       forwardedRef,
       initial,
