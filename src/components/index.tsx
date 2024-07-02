@@ -1,4 +1,4 @@
-import ReactList, { ReactListProps } from '@jswork/react-list';
+import ReactList, { ReactListProps, TemplateCallback } from '@jswork/react-list';
 import cx from 'classnames';
 import React, { Component, HTMLAttributes } from 'react';
 import fdp from 'fast-deep-equal';
@@ -8,10 +8,6 @@ import { ReactHarmonyEvents } from '@jswork/harmony-events';
 const CLASS_NAME = 'react-interactive-list';
 
 type StdCallback = (value: any) => void;
-type TemplateCallback = (
-  item: { item: any; index: number; items: any[] },
-  cb: any
-) => React.ReactNode;
 
 export type ReactInteractiveListProps = {
   /**
@@ -49,7 +45,7 @@ export type ReactInteractiveListProps = {
   /**
    * The empty create template.
    */
-  defaults?: () => any;
+  defaults: () => any;
   /**
    * The change handler.
    */
@@ -129,7 +125,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     if (value.length < initial) {
       const _value = value.slice(0);
       for (let i = 0; i < initial - value.length; i++) {
-        _value.push(defaults?.());
+        _value.push(defaults());
       }
       this.handleChange(_value);
     }
@@ -141,7 +137,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const { defaults } = this.props;
     const _value = value.slice(0);
     if (this.isGteMax) return;
-    _value.push(defaults?.());
+    _value.push(defaults());
     this.handleChange(_value);
   };
 
@@ -210,8 +206,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const { template } = this.props;
     const { value } = this.state;
     const _value = value.slice();
-    const cb = () => this.remove(index);
-    return template({ item, index, items: _value }, cb);
+    return template({ item, index, items: _value });
   };
 
   handleChange = (inValue: any[]) => {

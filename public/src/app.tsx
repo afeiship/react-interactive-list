@@ -61,12 +61,15 @@ export default () => {
   const [items2, setItems2] = useState([...messages.slice(0, 3)]);
   const ref1 = useRef(null);
 
-  const template = ({ item, index }, cb) => {
+  const template = ({ item, index }) => {
     const idx = index + 1;
     return (
       <div className="message" key={item.id}>
         <nav>
-          <button onClick={cb}>DELETE</button>
+          <button onClick={() => {
+            ReactInteractiveList.event.emit('i1:remove', index);
+          }}>DELETE
+          </button>
           <button disabled={index === 0} onClick={() => ReactInteractiveList.event.emit('i2:up', index)}>Up</button>
           <button disabled={index === items2.length - 1}
                   onClick={() => ReactInteractiveList.event.emit('i2:down', index)}>Down
