@@ -202,7 +202,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   }
 
   componentWillUnmount() {
-    this.harmonyEvents?.off();
+    this.harmonyEvents?.destroy();
   }
 
   template = ({ item, index }) => {
