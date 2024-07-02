@@ -2,10 +2,10 @@ import ReactList, { ReactListProps } from '@jswork/react-list';
 import cx from 'classnames';
 import React, { Component, HTMLAttributes } from 'react';
 import fdp from 'fast-deep-equal';
-import HarmonyEvents from '@jswork/harmony-events';
+import type { EventMittNamespace } from '@jswork/event-mitt';
+import { ReactHarmonyEvents } from '@jswork/harmony-events';
 
 const CLASS_NAME = 'react-interactive-list';
-const HE_EVENTS = ['add', 'remove', 'set', 'up', 'down', 'clear', 'notify'];
 
 type StdCallback = (value: any) => void;
 type TemplateCallback = (
@@ -73,11 +73,12 @@ interface ReactInteractiveListState {
 }
 
 class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInteractiveListState> {
-  private harmonyEvents: HarmonyEvents | null = null;
+  private harmonyEvents: ReactHarmonyEvents | null = null;
   static displayName = CLASS_NAME;
+  static event: EventMittNamespace.EventMitt;
+  static events = ['add', 'remove', 'set', 'up', 'down', 'clear', 'notify'];
   static defaultProps = {
     name: '@',
-    harmony: false,
     initial: 0,
     min: 0,
     max: 100,
@@ -112,12 +113,12 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   constructor(inProps: ReactInteractiveListProps) {
     super(inProps);
-    const { value, harmony, name } = inProps;
+    const { value, name } = inProps;
 
     this.state = { value: [...value] };
-    this.harmonyEvents = new HarmonyEvents({
-      harmony, name, context: this,
-      ns: '$ilist', items: HE_EVENTS
+    this.harmonyEvents = new ReactHarmonyEvents({
+      name,
+      context: this
     });
   }
 
@@ -225,7 +226,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   render() {
     const {
       className,
-      harmony,
       name,
       listProps,
       forwardedRef,
@@ -251,3 +251,5 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 export default React.forwardRef((props: any, ref) => {
   return <ReactInteractiveList {...props} ref={ref} />;
 });
+
+export { ReactInteractiveList };

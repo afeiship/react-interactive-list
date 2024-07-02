@@ -7,8 +7,7 @@
   "main": "dist/index.js",
   "typings": "dist/main.d.ts",
   "files": [
-    "dist",
-    "global.d.ts"
+    "dist"
   ],
   "scripts": {
     "dev": "vite",
@@ -72,7 +71,7 @@
     "vite-plugin-pwa": "^0.7.3"
   },
   "dependencies": {
-    "@jswork/harmony-events": "^1.0.8",
+    "@jswork/harmony-events": "^1.1.2",
     "@jswork/react-list": "^1.2.3",
     "classnames": "^2.2.6",
     "fast-deep-equal": "^3.1.3"

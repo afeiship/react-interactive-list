@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import ReactInteractiveList from '../../src/main';
+import ReactInteractiveListUI, { ReactInteractiveList } from '../../src/main';
 import styled from 'styled-components';
 import '@jswork/next';
 
@@ -67,8 +67,9 @@ export default () => {
       <div className="message" key={item.id}>
         <nav>
           <button onClick={cb}>DELETE</button>
-          <button disabled={index === 0} onClick={() => nx.$ilist.event.emit('i2:up', index)}>Up</button>
-          <button disabled={index === items2.length - 1} onClick={() => nx.$ilist.event.emit('i2:down', index)}>Down
+          <button disabled={index === 0} onClick={() => ReactInteractiveList.event.emit('i2:up', index)}>Up</button>
+          <button disabled={index === items2.length - 1}
+                  onClick={() => ReactInteractiveList.event.emit('i2:down', index)}>Down
           </button>
         </nav>
         <span>
@@ -102,27 +103,26 @@ export default () => {
       <nav className="actions">
         <button
           onClick={() => {
-            nx.$ilist.event.emit('i1:add');
+            ReactInteractiveList.event.emit('i1:add');
           }}>
           Add
         </button>
         <button
           onClick={() => {
-            nx.$ilist.event.emit('i1:remove', 0);
+            ReactInteractiveList.event.emit('i1:remove', 0);
           }}>
           Remove 0
         </button>
         <button
           onClick={() => {
-            nx.$ilist.event.emit('i1:clear');
+            ReactInteractiveList.event.emit('i1:clear');
           }}>
           Empty
         </button>
       </nav>
-      <ReactInteractiveList
+      <ReactInteractiveListUI
         name="i1"
         ref={ref1}
-        harmony
         listProps={{ className: 'react-list-x', as: 'section' }}
         value={items}
         template={template}
@@ -130,10 +130,9 @@ export default () => {
         onChange={handleChange}
       />
       <hr />
-      <ReactInteractiveList
+      <ReactInteractiveListUI
         name="i2"
         initial={3}
-        harmony
         listProps={{ className: 'react-list-x', as: 'section' }}
         value={items2}
         template={template}
