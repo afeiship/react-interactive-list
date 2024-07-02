@@ -19,10 +19,6 @@ export type ReactInteractiveListProps = {
    */
   name?: string;
   /**
-   * If use harmony mode.
-   */
-  harmony?: boolean;
-  /**
    * The initial size.
    */
   initial?: number;
