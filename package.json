@@ -1,7 +1,7 @@
 {
   "name": "@jswork/react-interactive-list",
   "homepage": "https://js.work",
-  "version": "1.4.7",
+  "version": "1.4.8",
   "description": "React interactive-list.",
   "license": "MIT",
   "main": "dist/index.js",
@@ -26,6 +26,7 @@
     "@jswork/next": "^1.2.2",
     "@jswork/next-replace-in-file": "^1.0.0",
     "@jswork/next-rollup-banner": "^1.0.12",
+    "@jswork/react-list": "^1.2.7",
     "@jswork/react-markdown-props": "^1.0.1",
     "@rollup/plugin-commonjs": "^25.0.3",
     "@rollup/plugin-image": "^2.1.1",
@@ -72,7 +73,6 @@
   },
   "dependencies": {
     "@jswork/harmony-events": "^1.1.2",
-    "@jswork/react-list": "^1.2.7",
     "classnames": "^2.2.6",
     "fast-deep-equal": "^3.1.3"
   },
