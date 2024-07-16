@@ -18,18 +18,11 @@ npm install -S @jswork/react-interactive-list
 
   // or use sass
   @import "~@jswork/react-interactive-list/dist/style.scss";
-
-  // customize your styles:
-  $react-interactive-list-options: ()
   ```
 2. import js
   ```js
 __GENERATE_DAPP__
   ```
-3. import `global.d.ts`
-```ts
-/// <reference types="@jswork/react-interactive-list/global.d.ts" />
-```
 
 ## preview
 - https://afeiship.github.io/react-interactive-list/

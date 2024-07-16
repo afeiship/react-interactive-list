@@ -3,9 +3,9 @@
     "requireCleanWorkingDir": false
   },
   "hooks": {
-    "after:init": ["t2k", "npm run docs"],
-    "after:bump": ["npm run build"],
-    "after:release": ["npm pkg get name | cnpm sync"]
+    "after:init": ["t2k"],
+    "after:bump": ["yarn run build"],
+    "after:release": ["yarn pkg get name | cnpm sync"]
   },
   "github": {
     "release": true,
