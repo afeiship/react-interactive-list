@@ -1,6 +1,6 @@
 {
   "name": "@jswork/react-interactive-list",
-  "version": "1.4.8",
+  "version": "1.4.9",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -37,5 +37,18 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
-  }
+  },
+  "keywords": [
+    "react",
+    "component",
+    "interactive",
+    "list",
+    "create",
+    "delete",
+    "destory",
+    "edit",
+    "remove",
+    "update",
+    "ilist"
+  ]
 }
