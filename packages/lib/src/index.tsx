@@ -4,6 +4,7 @@ import React, { Component, HTMLAttributes } from 'react';
 import fdp from 'fast-deep-equal';
 import type { EventMittNamespace } from '@jswork/event-mitt';
 import { ReactHarmonyEvents } from '@jswork/harmony-events';
+import useCommand from './use-command';
 
 const CLASS_NAME = 'react-interactive-list';
 
@@ -74,7 +75,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     initial: 0,
     min: 0,
     max: 100,
-    value: []
+    value: [],
   };
 
   get length() {
@@ -98,7 +99,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const props = {
       items: value,
       template: this.template,
-      ...listProps
+      ...listProps,
     };
     return <ReactList {...props} />;
   }
@@ -110,7 +111,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     this.state = { value: [...value] };
     this.harmonyEvents = new ReactHarmonyEvents({
       name,
-      context: this
+      context: this,
     });
   }
 
@@ -243,4 +244,4 @@ export default React.forwardRef((props: any, ref) => {
   return <ReactInteractiveList {...props} ref={ref} />;
 });
 
-export { ReactInteractiveList };
+export { ReactInteractiveList, useCommand };
