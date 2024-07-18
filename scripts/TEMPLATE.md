@@ -12,14 +12,7 @@ npm install -S @jswork/react-interactive-list
 ```
 
 ## usage
-1. import css
-  ```scss
-  @import "~@jswork/react-interactive-list/dist/style.css";
-
-  // or use sass
-  @import "~@jswork/react-interactive-list/dist/style.scss";
-  ```
-2. import js
+> import js
   ```js
 __GENERATE_DAPP__
   ```
