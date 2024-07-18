@@ -1,12 +1,13 @@
 import { ReactInteractiveList } from '.';
+import { useRef } from 'react';
 
-const createCommand = (name: string) => {
-  const emitter = ReactInteractiveList.event;
+const useCommand = (name: string) => {
+  const { current: emitter } = useRef(ReactInteractiveList.event);
   const add = () => emitter.emit(`${name}:add`);
   const remove = (index: number) => emitter.emit(`${name}:remove`, index);
   const set = (items: any[]) => emitter.emit(`${name}:set`, items);
-  const up = () => emitter.emit(`${name}:up`);
-  const down = () => emitter.emit(`${name}:down`);
+  const up = (index: number) => emitter.emit(`${name}:up`, index);
+  const down = (index: number) => emitter.emit(`${name}:down`, index);
   const clear = () => emitter.emit(`${name}:clear`);
   const notify = () => emitter.emit(`${name}:notify`);
 
@@ -18,8 +19,8 @@ const createCommand = (name: string) => {
     up,
     down,
     clear,
-    notify,
+    notify
   };
 };
 
-export default createCommand;
+export default useCommand;

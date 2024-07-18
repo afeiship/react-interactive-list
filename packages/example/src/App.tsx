@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import ReactInteractiveListUI, { ReactInteractiveList } from '@jswork/react-interactive-list/src';
 import '@jswork/react-interactive-list/src/style.scss';
 
@@ -8,16 +8,11 @@ const messages = [
   'Did you hear about the guy whose whole left side was cut off? He’s all right now.',
   'The roundest knight at King Arthur’s round table was Sir Cumference.',
   'To write with a broken pencil is pointless.',
-  'When fish are in schools they sometimes take debate.',
-  'The short fortune teller who escaped from prison was a small medium at large.',
-  'A thief who stole a calendar… got twelve months.',
-  'A thief fell and broke his leg in wet cement. He became a hardened criminal.'
 ].map((message, index) => ({ message, index, id: `id_${index}` }));
 
 
 function App() {
   const [items, setItems] = useState(messages);
-  const [items2, setItems2] = useState([...messages.slice(0, 3)]);
   const ref1 = useRef(null);
 
   const template = ({ item, index }) => {
@@ -30,10 +25,10 @@ function App() {
           }}>DELETE
           </button>
           <button className="btn btn-primary btn-sm" disabled={index === 0}
-                  onClick={() => ReactInteractiveList.event.emit('i2:up', index)}>Up
+                  onClick={() => ReactInteractiveList.event.emit('i1:up', index)}>Up
           </button>
-          <button className="btn btn-primary btn-sm" disabled={index === items2.length - 1}
-                  onClick={() => ReactInteractiveList.event.emit('i2:down', index)}>Down
+          <button className="btn btn-primary btn-sm" disabled={index === items.length - 1}
+                  onClick={() => ReactInteractiveList.event.emit('i1:down', index)}>Down
           </button>
         </nav>
         <span>
@@ -52,10 +47,6 @@ function App() {
 
   const handleChange = (value) => {
     setItems(value);
-  };
-
-  const handleChange2 = (value) => {
-    setItems2(value);
   };
 
   return (
@@ -91,16 +82,6 @@ function App() {
         template={template}
         defaults={defaults}
         onChange={handleChange}
-      />
-      <hr />
-      <ReactInteractiveListUI
-        name="i2"
-        initial={3}
-        listProps={{ className: 'y-1', as: 'section' }}
-        value={items2}
-        template={template}
-        defaults={defaults}
-        onChange={handleChange2}
       />
     </div>
   );
