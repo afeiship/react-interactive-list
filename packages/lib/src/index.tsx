@@ -4,7 +4,7 @@ import React, { Component, HTMLAttributes } from 'react';
 import fdp from 'fast-deep-equal';
 import type { EventMittNamespace } from '@jswork/event-mitt';
 import { ReactHarmonyEvents } from '@jswork/harmony-events';
-import useCommand from './use-command';
+import createCommand from './create-command';
 
 const CLASS_NAME = 'react-interactive-list';
 
@@ -244,4 +244,4 @@ export default React.forwardRef((props: any, ref) => {
   return <ReactInteractiveList {...props} ref={ref} />;
 });
 
-export { ReactInteractiveList, useCommand };
+export { ReactInteractiveList, createCommand };

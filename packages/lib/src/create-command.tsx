@@ -1,6 +1,6 @@
 import { ReactInteractiveList } from '.';
 
-const useCommand = (name: string) => {
+const createCommand = (name: string) => {
   const emitter = ReactInteractiveList.event;
   const add = () => emitter.emit(`${name}:add`);
   const remove = (index: number) => emitter.emit(`${name}:remove`, index);
@@ -22,4 +22,4 @@ const useCommand = (name: string) => {
   };
 };
 
-export default useCommand;
+export default createCommand;
