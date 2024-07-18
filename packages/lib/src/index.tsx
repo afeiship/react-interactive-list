@@ -4,7 +4,6 @@ import React, { Component, HTMLAttributes } from 'react';
 import fdp from 'fast-deep-equal';
 import type { EventMittNamespace } from '@jswork/event-mitt';
 import { ReactHarmonyEvents } from '@jswork/harmony-events';
-import useCommand from './use-command';
 
 const CLASS_NAME = 'react-interactive-list';
 
@@ -113,6 +112,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       name,
       context: this
     });
+    console.log('ReactInteractiveList: ', ReactInteractiveList.event);
   }
 
   private checkInitial = () => {
@@ -240,8 +240,4 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   }
 }
 
-export default React.forwardRef((props: any, ref) => {
-  return <ReactInteractiveList {...props} ref={ref} />;
-});
-
-export { ReactInteractiveList, useCommand };
+export default ReactInteractiveList;
