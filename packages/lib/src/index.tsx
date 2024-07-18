@@ -112,7 +112,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       name,
       context: this
     });
-    console.log('ReactInteractiveList: ', ReactInteractiveList.event);
   }
 
   private checkInitial = () => {
