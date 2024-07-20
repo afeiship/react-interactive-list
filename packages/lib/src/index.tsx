@@ -68,13 +68,13 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   private harmonyEvents: ReactHarmonyEvents | null = null;
   static displayName = CLASS_NAME;
   static event: EventMittNamespace.EventMitt;
-  static events = ['add', 'remove', 'set', 'up', 'down', 'clear', 'notify'];
+  static events = ['add', 'remove', 'set', 'up', 'down', 'top', 'bottom', 'clear', 'notify'];
   static defaultProps = {
     name: '@',
     initial: 0,
     min: 0,
     max: 100,
-    value: []
+    value: [],
   };
 
   get length() {
@@ -98,7 +98,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const props = {
       items: value,
       template: this.template,
-      ...listProps
+      ...listProps,
     };
     return <ReactList {...props} />;
   }
@@ -162,6 +162,22 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const temp = _value[inIndex + 1];
     _value[inIndex + 1] = _value[inIndex];
     _value[inIndex] = temp;
+    this.handleChange(_value);
+  };
+
+  top = (index: number) => {
+    const { value } = this.state;
+    const _value = value.slice(0);
+    const item = _value.splice(index, 1);
+    _value.unshift(item[0]);
+    this.handleChange(_value);
+  };
+
+  bottom = (index: number) => {
+    const { value } = this.state;
+    const _value = value.slice(0);
+    const item = _value.splice(index, 1);
+    _value.push(item[0]);
     this.handleChange(_value);
   };
 

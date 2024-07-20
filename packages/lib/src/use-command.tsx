@@ -11,6 +11,8 @@ const useCommand = (inName?: string) => {
   const down = (index: number) => emitter.emit(`${name}:down`, index);
   const clear = () => emitter.emit(`${name}:clear`);
   const notify = () => emitter.emit(`${name}:notify`);
+  const top = (index: number) => emitter.emit(`${name}:top`, index);
+  const bottom = (index: number) => emitter.emit(`${name}:bottom`, index);
 
   useEffect(() => {
     setEmitter(ReactInteractiveList.event);
@@ -23,7 +25,9 @@ const useCommand = (inName?: string) => {
     up,
     down,
     clear,
-    notify
+    notify,
+    top,
+    bottom,
   };
 };
 
