@@ -18,7 +18,7 @@ function App() {
   const template = ({ item, index }) => {
     const idx = index + 1;
     return (
-      <div className="bg-gray-100 p-1 hover:bg-gray-200 cursor-pointer" key={item.id}>
+      <div className="bg-gray-100 p-2 rounded-md hover:bg-gray-300 transition-all cursor-pointer" key={item.id}>
         <nav className="x-2">
           <button className="btn2" onClick={() => top(index)}>ToTop</button>
           <button className="btn2" onClick={() => bottom(index)}>ToBottom</button>
