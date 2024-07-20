@@ -105,13 +105,9 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   constructor(inProps: ReactInteractiveListProps) {
     super(inProps);
-    const { value, name } = inProps;
-
+    const { value } = inProps;
     this.state = { value: [...value] };
-    this.harmonyEvents = new ReactHarmonyEvents({
-      name,
-      context: this
-    });
+    this.harmonyEvents = ReactHarmonyEvents.create(this);
   }
 
   private checkInitial = () => {
