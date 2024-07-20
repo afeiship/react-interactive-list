@@ -1,9 +1,9 @@
 {
   "name": "@jswork/react-interactive-list",
-  "version": "1.5.2",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
-  "types": "dist/index.d.ts",
+  "version": "1.5.3",
+  "main": "dist/main.cjs.js",
+  "module": "dist/main.esm.js",
+  "types": "dist/main.d.ts",
   "description": "React interactive-list.",
   "homepage": "https://js.work",
   "license": "MIT",
