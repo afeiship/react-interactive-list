@@ -12,17 +12,10 @@ npm install -S @jswork/react-interactive-list
 ```
 
 ## usage
-1. import css
-  ```scss
-  @import "~@jswork/react-interactive-list/dist/style.css";
-
-  // or use sass
-  @import "~@jswork/react-interactive-list/dist/style.scss";
-  ```
-2. import js
+> import js
   ```js
-  import React, { useEffect, useRef, useState } from 'react';
-  import ReactInteractiveListUI, { ReactInteractiveList } from '@jswork/react-interactive-list';
+  import React, { useRef, useState } from 'react';
+  import ReactInteractiveListUI, { useCommand } from '@jswork/react-interactive-list/main';
   import '@jswork/react-interactive-list/dist/style.scss';
 
   const messages = [
@@ -30,18 +23,14 @@ npm install -S @jswork/react-interactive-list
     'Police were called to a day care, where a three-year-old was resisting a rest.',
     'Did you hear about the guy whose whole left side was cut off? He’s all right now.',
     'The roundest knight at King Arthur’s round table was Sir Cumference.',
-    'To write with a broken pencil is pointless.',
-    'When fish are in schools they sometimes take debate.',
-    'The short fortune teller who escaped from prison was a small medium at large.',
-    'A thief who stole a calendar… got twelve months.',
-    'A thief fell and broke his leg in wet cement. He became a hardened criminal.'
+    'To write with a broken pencil is pointless.'
   ].map((message, index) => ({ message, index, id: `id_${index}` }));
 
 
   function App() {
     const [items, setItems] = useState(messages);
-    const [items2, setItems2] = useState([...messages.slice(0, 3)]);
     const ref1 = useRef(null);
+    const cmd = useCommand('i1');
 
     const template = ({ item, index }) => {
       const idx = index + 1;
@@ -49,14 +38,21 @@ npm install -S @jswork/react-interactive-list
         <div className="bg-gray-100 p-1 hover:bg-gray-200 cursor-pointer" key={item.id}>
           <nav className="x-2">
             <button className="btn btn-primary btn-sm" onClick={() => {
-              ReactInteractiveList.event.emit('i1:remove', index);
+              // ReactInteractiveList.event.emit('i1:remove', index);
+              cmd.remove(index);
             }}>DELETE
             </button>
             <button className="btn btn-primary btn-sm" disabled={index === 0}
-                    onClick={() => ReactInteractiveList.event.emit('i2:up', index)}>Up
+                    onClick={() => {
+                      // ReactInteractiveList.event.emit('i1:up', index);
+                      cmd.up(index);
+                    }}>Up
             </button>
-            <button className="btn btn-primary btn-sm" disabled={index === items2.length - 1}
-                    onClick={() => ReactInteractiveList.event.emit('i2:down', index)}>Down
+            <button className="btn btn-primary btn-sm" disabled={index === items.length - 1}
+                    onClick={() => {
+                      // ReactInteractiveList.event.emit('i1:down', index);
+                      cmd.down(index);
+                    }}>Down
             </button>
           </nav>
           <span>
@@ -77,31 +73,30 @@ npm install -S @jswork/react-interactive-list
       setItems(value);
     };
 
-    const handleChange2 = (value) => {
-      setItems2(value);
-    };
-
     return (
       <div className="wp-5 mx-auto y-5 p-2">
         <nav className="x-2">
           <button
             className="btn btn-primary btn-sm"
             onClick={() => {
-              ReactInteractiveList.event.emit('i1:add');
+              // ReactInteractiveList.event.emit('i1:add');
+              cmd.add();
             }}>
             Add
           </button>
           <button
             className="btn btn-primary btn-sm"
             onClick={() => {
-              ReactInteractiveList.event.emit('i1:remove', 0);
+              // ReactInteractiveList.event.emit('i1:remove', 0);
+              cmd.remove(0);
             }}>
             Remove 0
           </button>
           <button
             className="btn btn-primary btn-sm"
             onClick={() => {
-              ReactInteractiveList.event.emit('i1:clear');
+              // ReactInteractiveList.event.emit('i1:clear');
+              cmd.clear();
             }}>
             Empty
           </button>
@@ -114,16 +109,6 @@ npm install -S @jswork/react-interactive-list
           template={template}
           defaults={defaults}
           onChange={handleChange}
-        />
-        <hr />
-        <ReactInteractiveListUI
-          name="i2"
-          initial={3}
-          listProps={{ className: 'y-1', as: 'section' }}
-          value={items2}
-          template={template}
-          defaults={defaults}
-          onChange={handleChange2}
         />
       </div>
     );

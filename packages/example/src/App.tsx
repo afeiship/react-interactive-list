@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import ReactInteractiveListUI, { useCommand } from '@jswork/react-interactive-list/src/main';
-import '@jswork/react-interactive-list/src/style.scss';
 
 const messages = [
   'I wondered why the baseball was getting bigger. Then it hit me.',
