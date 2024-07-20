@@ -3,3 +3,7 @@
 @tailwind utilities;
 
 /* Your custom CSS here */
+
+.btn1{
+  @apply btn btn-primary btn-sm;
+}

@@ -20,15 +20,11 @@ function App() {
     return (
       <div className="bg-gray-100 p-1 hover:bg-gray-200 cursor-pointer" key={item.id}>
         <nav className="x-2">
-          <button className="btn btn-primary btn-sm" onClick={() => remove(index)}>DELETE</button>
-          <button className="btn btn-primary btn-sm" disabled={index === 0} onClick={() => up(index)}>Up</button>
-          <button className="btn btn-primary btn-sm" disabled={index === items.length - 1}
-                  onClick={() => down(index)}>Down
-          </button>
+          <button className="btn1" onClick={() => remove(index)}>DELETE</button>
+          <button className="btn1" disabled={index === 0} onClick={() => up(index)}>Up</button>
+          <button className="btn1" disabled={index === items.length - 1} onClick={() => down(index)}>Down</button>
         </nav>
-        <span>
-          {idx}.{item.message}
-        </span>
+        <span>{idx}.{item.message}</span>
       </div>
     );
   };
@@ -40,16 +36,14 @@ function App() {
     };
   };
 
-  const handleChange = (value) => {
-    setItems(value);
-  };
+  const handleChange = (value) => setItems(value);
 
   return (
     <div className="wp-5 mx-auto y-5 p-2">
       <nav className="x-2">
-        <button className="btn btn-primary btn-sm" onClick={add}>Add</button>
-        <button className="btn btn-primary btn-sm" onClick={() => remove(0)}>Remove 0</button>
-        <button className="btn btn-primary btn-sm" onClick={clear}>Empty</button>
+        <button className="btn1" onClick={add}>Add</button>
+        <button className="btn1" onClick={() => remove(0)}>Remove 0</button>
+        <button className="btn1" onClick={clear}>Empty</button>
       </nav>
       <ReactInteractiveListUI
         name="i1"
