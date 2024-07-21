@@ -4,15 +4,18 @@ import { useEffect, useState } from 'react';
 const useCommand = (inName?: string) => {
   const name = inName || '@';
   const [emitter, setEmitter] = useState<any>();
-  const add = () => emitter.emit(`${name}:add`);
-  const remove = (index: number) => emitter.emit(`${name}:remove`, index);
-  const set = (items: any[]) => emitter.emit(`${name}:set`, items);
-  const up = (index: number) => emitter.emit(`${name}:up`, index);
-  const down = (index: number) => emitter.emit(`${name}:down`, index);
-  const clear = () => emitter.emit(`${name}:clear`);
-  const notify = () => emitter.emit(`${name}:notify`);
-  const top = (index: number) => emitter.emit(`${name}:top`, index);
-  const bottom = (index: number) => emitter.emit(`${name}:bottom`, index);
+  const execute = (command: string, ...args: any[]) => emitter?.emit(`${name}:${command}`, ...args);
+
+  // the command repository:
+  const add = () => execute('add');
+  const remove = (index: number) => execute('remove', index);
+  const set = (items: any[]) => execute('set', items);
+  const up = (index: number) => execute('up', index);
+  const down = (index: number) => execute('down', index);
+  const clear = () => execute('clear');
+  const notify = () => execute('notify');
+  const top = (index: number) => execute('top', index);
+  const bottom = (index: number) => execute('bottom', index);
 
   useEffect(() => {
     setEmitter(ReactInteractiveList.event);
