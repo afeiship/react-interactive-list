@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import ReactInteractiveListUI, { useCommand } from '@jswork/react-interactive-list/src/main';
+import TemplateItem from './compnoents/template-item.tsx';
 
 const messages = [
   'I wondered why the baseball was getting bigger. Then it hit me.',
@@ -15,44 +16,7 @@ function App() {
   const { add, remove, clear, up, down, top, bottom, notify } = useCommand('i1');
 
   const template = ({ item, index }) => {
-    const idx = index + 1;
-    return (
-      <div
-        className="bg-gray-100 p-2 rounded-md hover:bg-gray-300 transition-all cursor-pointer"
-        key={item.id}>
-        <nav className="x-2">
-          <button className="btn2" onClick={() => top(index)}>
-            ToTop
-          </button>
-          <button className="btn2" onClick={() => bottom(index)}>
-            ToBottom
-          </button>
-          <button className="btn1" onClick={() => remove(index)}>
-            DELETE
-          </button>
-          <button className="btn1" disabled={index === 0} onClick={() => up(index)}>
-            Up
-          </button>
-          <button
-            className="btn1"
-            disabled={index === items.length - 1}
-            onClick={() => down(index)}>
-            Down
-          </button>
-        </nav>
-        <span>
-          {idx} -{' '}
-          <input
-            className="w-full border border-slate-300"
-            value={item.message}
-            onChange={(e) => {
-              item.message = e.target.value;
-              notify();
-            }}
-          />{' '}
-        </span>
-      </div>
-    );
+    return <TemplateItem key={index} item={item} index={index} items={items} />;
   };
 
   const defaults = () => {
