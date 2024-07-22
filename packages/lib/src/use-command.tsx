@@ -1,10 +1,9 @@
 import ReactInteractiveList from '.';
-import { useEffect, useState } from 'react';
 
 const useCommand = (inName?: string) => {
   const name = inName || '@';
-  const [emitter, setEmitter] = useState<any>();
-  const execute = (command: string, ...args: any[]) => emitter?.emit(`${name}:${command}`, ...args);
+  const execute = (command: string, ...args: any[]) =>
+    ReactInteractiveList.event.emit(`${name}:${command}`, ...args);
 
   // the command repository:
   const add = () => execute('add');
@@ -16,10 +15,6 @@ const useCommand = (inName?: string) => {
   const notify = () => execute('notify');
   const top = (index: number) => execute('top', index);
   const bottom = (index: number) => execute('bottom', index);
-
-  useEffect(() => {
-    setEmitter(ReactInteractiveList.event);
-  }, []);
 
   return {
     add,
