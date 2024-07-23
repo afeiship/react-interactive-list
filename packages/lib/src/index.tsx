@@ -39,6 +39,10 @@ export type ReactInteractiveListProps = {
    */
   template: TemplateCallback;
   /**
+   * The extra options for template function.
+   */
+  options?: any;
+  /**
    * The empty create template.
    */
   defaults: () => any;
@@ -74,7 +78,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     initial: 0,
     min: 0,
     max: 100,
-    value: [],
+    value: []
   };
 
   get length() {
@@ -94,11 +98,12 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   get listView() {
     const { value } = this.state;
-    const { listProps } = this.props;
+    const { options, listProps } = this.props;
     const props = {
       items: value,
       template: this.template,
-      ...listProps,
+      options,
+      ...listProps
     };
     return <ReactList {...props} />;
   }
@@ -211,10 +216,10 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   }
 
   template = ({ item, index }) => {
-    const { template } = this.props;
+    const { template, options } = this.props;
     const { value } = this.state;
     const _value = value.slice();
-    return template({ item, index, items: _value });
+    return template({ item, index, items: _value, options });
   };
 
   handleChange = (inValue: any[]) => {
@@ -230,6 +235,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const {
       className,
       name,
+      options,
       listProps,
       forwardedRef,
       initial,
