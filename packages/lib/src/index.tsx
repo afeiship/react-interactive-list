@@ -219,7 +219,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const { template, options } = this.props;
     const { value } = this.state;
     const _value = value.slice();
-    return template({ item, index, items: _value, options });
+    return template?.({ item, index, items: _value, options });
   };
 
   handleChange = (inValue: any[]) => {
