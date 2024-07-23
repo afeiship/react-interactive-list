@@ -1,4 +1,4 @@
-import ReactList, { ReactListProps, TemplateCallback } from '@jswork/react-list';
+import ReactList, { ReactListProps, TemplateArgs } from '@jswork/react-list';
 import cx from 'classnames';
 import React, { Component, HTMLAttributes } from 'react';
 import fdp from 'fast-deep-equal';
@@ -37,7 +37,7 @@ export type ReactInteractiveListProps = {
   /**
    * The data item template.
    */
-  template: TemplateCallback;
+  template: (args: TemplateArgs) => any;
   /**
    * The extra options for template function.
    */
