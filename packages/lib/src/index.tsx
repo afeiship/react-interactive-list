@@ -6,6 +6,7 @@ import type { EventMittNamespace } from '@jswork/event-mitt';
 import { ReactHarmonyEvents } from '@jswork/harmony-events';
 
 const CLASS_NAME = 'react-interactive-list';
+const EMPTY_ARGS = { items: [], item: null, index: -1, options: null };
 
 type StdCallback = (value: any) => void;
 
@@ -38,6 +39,10 @@ export type ReactInteractiveListProps = {
    * The data item template.
    */
   template: ReactListProps['template'];
+  /**
+   * The empty template.
+   */
+  templateEmpty: ReactListProps['templateEmpty'];
   /**
    * The extra options for template function.
    */
@@ -80,6 +85,13 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     max: 100,
     value: []
   };
+
+  get emptyArgs() {
+    return {
+      ...EMPTY_ARGS,
+      options: this.props.options
+    };
+  }
 
   get length() {
     const { value } = this.state;
@@ -243,11 +255,14 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       max,
       value,
       template,
+      templateEmpty,
       defaults,
       onChange,
       onError,
       ...props
     } = this.props;
+
+    if (value.length === 0) return templateEmpty?.(this.emptyArgs) || null;
 
     return (
       <div className={cx(CLASS_NAME, className)} ref={forwardedRef} {...props}>
