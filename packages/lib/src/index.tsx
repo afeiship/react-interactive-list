@@ -124,7 +124,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     super(inProps);
     const { value } = inProps;
     this.state = { value: [...value] };
-    this.harmonyEvents = ReactHarmonyEvents.create(this);
   }
 
   private checkInitial = () => {
@@ -221,6 +220,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   componentDidMount() {
     this.checkInitial();
+    this.harmonyEvents = ReactHarmonyEvents.create(this);
   }
 
   componentWillUnmount() {
