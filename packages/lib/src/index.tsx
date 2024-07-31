@@ -42,7 +42,7 @@ export type ReactInteractiveListProps = {
   /**
    * The empty template.
    */
-  templateEmpty: ReactListProps['templateEmpty'];
+  templateEmpty?: ReactListProps['templateEmpty'];
   /**
    * The extra options for template function.
    */
@@ -62,7 +62,7 @@ export type ReactInteractiveListProps = {
   /**
    * Forwards a ref to the underlying div element.
    */
-  forwardedRef: any;
+  forwardedRef?: any;
   /**
    * The props for react-list.
    */
