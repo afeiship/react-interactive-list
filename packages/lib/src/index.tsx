@@ -204,7 +204,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   notify = () => {
     const { value } = this.state;
-    this.handleChange(value);
+    this.handleChange(value.slice(0));
   };
 
   /* ----- public eventBus methods ----- */
