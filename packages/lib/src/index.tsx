@@ -42,7 +42,7 @@ export type ReactInteractiveListProps = {
   /**
    * The empty template.
    */
-  templateEmpty: ReactListProps['templateEmpty'];
+  templateEmpty?: ReactListProps['templateEmpty'];
   /**
    * The extra options for template function.
    */
@@ -62,7 +62,7 @@ export type ReactInteractiveListProps = {
   /**
    * Forwards a ref to the underlying div element.
    */
-  forwardedRef: any;
+  forwardedRef?: any;
   /**
    * The props for react-list.
    */
@@ -124,7 +124,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     super(inProps);
     const { value } = inProps;
     this.state = { value: [...value] };
-    this.harmonyEvents = ReactHarmonyEvents.create(this);
   }
 
   private checkInitial = () => {
@@ -221,6 +220,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   componentDidMount() {
     this.checkInitial();
+    this.harmonyEvents = ReactHarmonyEvents.create(this);
   }
 
   componentWillUnmount() {
