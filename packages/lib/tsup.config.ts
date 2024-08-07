@@ -13,7 +13,15 @@ export default defineConfig({
   splitting: true,
   target: 'es6',
   bundle: true,
-  external: ['react', 'react-dom', 'classnames'],
+  external: [
+    'react',
+    'react-dom',
+    'classnames',
+    '@jswork/react-list',
+    '@jswork/harmony-events',
+    '@jswork/event-mitt',
+    'fast-deep-equal',
+  ],
   loader: {
     '.svg': 'dataurl',
   },
