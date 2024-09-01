@@ -3,7 +3,9 @@ import RcComponent from '.';
 const useCommand = (inName?: string) => {
   const name = inName || '@';
   const execute = (command: string, ...args: any[]) =>
-    RcComponent.event.emit(`${name}:${command}`, ...args);
+    RcComponent.event?.emit(`${name}:${command}`, ...args);
+
+  const listen = (cmd: string, callback: any) => RcComponent.event?.on(`${name}:${cmd}`, callback);
 
   // the command repository:
   const add = () => execute('add');
@@ -17,6 +19,7 @@ const useCommand = (inName?: string) => {
   const bottom = (index: number) => execute('bottom', index);
 
   return {
+    listen,
     add,
     remove,
     set,

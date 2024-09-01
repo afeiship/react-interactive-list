@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactInteractiveListUI, { useCommand } from '@jswork/react-interactive-list/src/main';
 import TemplateItem from './compnoents/template-item.tsx';
 
@@ -13,7 +13,7 @@ const messages = [
 function App() {
   const [items, setItems] = useState(messages);
   const ref1 = useRef(null);
-  const { add, remove, clear, up, down, top, bottom, notify } = useCommand('i1');
+  const { add, remove, clear, up, down, top, bottom, notify, listen } = useCommand('i1');
 
   const template = ({ item, index }) => {
     return <TemplateItem key={index} item={item} index={index} items={items} />;
@@ -30,6 +30,16 @@ function App() {
     setItems(value);
     console.log('value: ', value);
   };
+
+  useEffect(() => {
+    const res = listen('remove', (args) => {
+      console.log('remove args:', args);
+    });
+
+    return () => {
+      return res.destroy();
+    };
+  }, []);
 
   return (
     <div className="wp-5 mx-auto y-5 p-2">
