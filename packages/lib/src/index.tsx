@@ -77,7 +77,18 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   private harmonyEvents: ReactHarmonyEvents | null = null;
   static displayName = CLASS_NAME;
   static event: EventMittNamespace.EventMitt;
-  static events = ['add', 'remove', 'set', 'up', 'down', 'top', 'bottom', 'clear', 'notify', 'change'];
+  static events = [
+    'add',
+    'remove',
+    'set',
+    'up',
+    'down',
+    'top',
+    'bottom',
+    'clear',
+    'notify',
+    'change',
+  ];
   static defaultProps = {
     name: '@',
     initial: 0,
@@ -85,6 +96,9 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     max: 100,
     value: [],
   };
+
+  declare readonly eventBus: EventMittNamespace.EventMitt;
+  private currentAction = '';
 
   get emptyArgs() {
     return {
@@ -123,6 +137,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   constructor(inProps: ReactInteractiveListProps) {
     super(inProps);
     const { value } = inProps;
+    this.eventBus = ReactInteractiveList.event;
     this.state = { value: [...value] };
   }
 
@@ -146,6 +161,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const _value = value.slice(0);
     if (this.isGteMax) return;
     _value.push(defaults());
+    this.currentAction = 'add';
     this.handleChange(_value);
   };
 
@@ -154,10 +170,12 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const _value = value.slice(0);
     if (this.isLteMin) return;
     _value.splice(inIndex, 1);
+    this.currentAction = 'remove';
     this.handleChange(_value);
   };
 
   set = (inValue: any[]) => {
+    this.currentAction = 'set';
     this.handleChange(inValue);
   };
 
@@ -168,6 +186,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const temp = _value[inIndex - 1];
     _value[inIndex - 1] = _value[inIndex];
     _value[inIndex] = temp;
+    this.currentAction = 'up';
     this.handleChange(_value);
   };
 
@@ -178,6 +197,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const temp = _value[inIndex + 1];
     _value[inIndex + 1] = _value[inIndex];
     _value[inIndex] = temp;
+    this.currentAction = 'down';
     this.handleChange(_value);
   };
 
@@ -186,6 +206,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const _value = value.slice(0);
     const item = _value.splice(index, 1);
     _value.unshift(item[0]);
+    this.currentAction = 'top';
     this.handleChange(_value);
   };
 
@@ -194,15 +215,18 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const _value = value.slice(0);
     const item = _value.splice(index, 1);
     _value.push(item[0]);
+    this.currentAction = 'bottom';
     this.handleChange(_value);
   };
 
   clear = () => {
+    this.currentAction = 'clear';
     this.handleChange([]);
   };
 
   notify = () => {
     const { value } = this.state;
+    this.currentAction = 'notify';
     this.handleChange(value.slice(0));
   };
 
@@ -240,7 +264,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const newValue = [...inValue];
     this.setState({ value: inValue }, () => {
       onChange?.(inValue);
-      ReactInteractiveList.event.emit(`${name}:change`, { oldValue, newValue });
+      this.eventBus.emit(`${name}:change`, { action: this.currentAction, oldValue, newValue });
       this.length < min && onError?.('EQ_MIN');
       this.length > max && onError?.('EQ_MAX');
     });
