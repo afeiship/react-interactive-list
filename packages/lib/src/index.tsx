@@ -8,7 +8,7 @@ import { ReactHarmonyEvents } from '@jswork/harmony-events';
 const CLASS_NAME = 'react-interactive-list';
 const EMPTY_ARGS = { items: [], item: null, index: -1, options: null };
 
-type StdCallback = (value: any) => void;
+type StdCallback = (value: any, action?: string) => void;
 
 export type ReactInteractiveListProps = {
   /**
@@ -83,13 +83,13 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     initial: 0,
     min: 0,
     max: 100,
-    value: []
+    value: [],
   };
 
   get emptyArgs() {
     return {
       ...EMPTY_ARGS,
-      options: this.props.options
+      options: this.props.options,
     };
   }
 
@@ -115,7 +115,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       items: value,
       template: this.template,
       options,
-      ...listProps
+      ...listProps,
     };
     return <ReactList {...props} />;
   }
@@ -135,7 +135,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       for (let i = 0; i < initial - value.length; i++) {
         _value.push(defaults());
       }
-      this.handleChange(_value);
+      this.handleChange(_value, 'initial');
     }
   };
 
@@ -146,7 +146,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const _value = value.slice(0);
     if (this.isGteMax) return;
     _value.push(defaults());
-    this.handleChange(_value);
+    this.handleChange(_value, 'add');
   };
 
   remove = (inIndex: number) => {
@@ -154,11 +154,11 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const _value = value.slice(0);
     if (this.isLteMin) return;
     _value.splice(inIndex, 1);
-    this.handleChange(_value);
+    this.handleChange(_value, 'delete');
   };
 
   set = (inValue: any[]) => {
-    this.handleChange(inValue);
+    this.handleChange(inValue, 'update');
   };
 
   up = (inIndex: number) => {
@@ -168,7 +168,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const temp = _value[inIndex - 1];
     _value[inIndex - 1] = _value[inIndex];
     _value[inIndex] = temp;
-    this.handleChange(_value);
+    this.handleChange(_value, 'up');
   };
 
   down = (inIndex: number) => {
@@ -178,7 +178,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const temp = _value[inIndex + 1];
     _value[inIndex + 1] = _value[inIndex];
     _value[inIndex] = temp;
-    this.handleChange(_value);
+    this.handleChange(_value, 'down');
   };
 
   top = (index: number) => {
@@ -186,7 +186,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const _value = value.slice(0);
     const item = _value.splice(index, 1);
     _value.unshift(item[0]);
-    this.handleChange(_value);
+    this.handleChange(_value, 'top');
   };
 
   bottom = (index: number) => {
@@ -194,16 +194,16 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const _value = value.slice(0);
     const item = _value.splice(index, 1);
     _value.push(item[0]);
-    this.handleChange(_value);
+    this.handleChange(_value, 'bottom');
   };
 
   clear = () => {
-    this.handleChange([]);
+    this.handleChange([], 'clear');
   };
 
   notify = () => {
     const { value } = this.state;
-    this.handleChange(value.slice(0));
+    this.handleChange(value.slice(0), 'notify');
   };
 
   /* ----- public eventBus methods ----- */
@@ -234,10 +234,10 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     return template?.({ item, index, items: _value, options });
   };
 
-  handleChange = (inValue: any[]) => {
+  handleChange = (inValue: any[], action: string) => {
     const { onChange, onError, min, max } = this.props;
     this.setState({ value: inValue }, () => {
-      onChange?.(inValue);
+      onChange?.(inValue, action);
       this.length < min && onError?.('EQ_MIN');
       this.length > max && onError?.('EQ_MAX');
     });
