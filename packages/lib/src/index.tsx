@@ -77,19 +77,19 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   private harmonyEvents: ReactHarmonyEvents | null = null;
   static displayName = CLASS_NAME;
   static event: EventMittNamespace.EventMitt;
-  static events = ['add', 'remove', 'set', 'up', 'down', 'top', 'bottom', 'clear', 'notify'];
+  static events = ['add', 'remove', 'set', 'up', 'down', 'top', 'bottom', 'clear', 'notify', 'change'];
   static defaultProps = {
     name: '@',
     initial: 0,
     min: 0,
     max: 100,
-    value: []
+    value: [],
   };
 
   get emptyArgs() {
     return {
       ...EMPTY_ARGS,
-      options: this.props.options
+      options: this.props.options,
     };
   }
 
@@ -115,7 +115,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       items: value,
       template: this.template,
       options,
-      ...listProps
+      ...listProps,
     };
     return <ReactList {...props} />;
   }
@@ -235,9 +235,12 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   };
 
   handleChange = (inValue: any[]) => {
-    const { onChange, onError, min, max } = this.props;
+    const { onChange, onError, min, max, name } = this.props;
+    const oldValue = this.state.value;
+    const newValue = [...inValue];
     this.setState({ value: inValue }, () => {
       onChange?.(inValue);
+      ReactInteractiveList.event.emit(`${name}:change`, { oldValue, newValue });
       this.length < min && onError?.('EQ_MIN');
       this.length > max && onError?.('EQ_MAX');
     });
