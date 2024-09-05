@@ -259,12 +259,18 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   };
 
   handleChange = (inValue: any[]) => {
-    const { onChange, onError, min, max, name } = this.props;
+    const { onChange, onError, min, max, name, options } = this.props;
     const oldValue = this.state.value;
     const newValue = [...inValue];
     this.setState({ value: inValue }, () => {
       onChange?.(inValue);
-      this.eventBus.emit(`${name}:change`, { action: this.currentAction, oldValue, newValue });
+      this.eventBus.emit(`${name}:change`, {
+        name,
+        options,
+        action: this.currentAction,
+        oldValue,
+        newValue,
+      });
       this.length < min && onError?.('EQ_MIN');
       this.length > max && onError?.('EQ_MAX');
     });
