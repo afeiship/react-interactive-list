@@ -17,7 +17,6 @@ const useCommand = (inName?: string) => {
   const notify = () => execute('notify');
   const top = (index: number) => execute('top', index);
   const bottom = (index: number) => execute('bottom', index);
-  const change = (args: any) => execute('change', args);
 
   return {
     listen,
@@ -30,7 +29,6 @@ const useCommand = (inName?: string) => {
     notify,
     top,
     bottom,
-    change,
   };
 };
 
