@@ -97,7 +97,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     value: [],
   };
 
-  declare readonly eventBus: EventMittNamespace.EventMitt;
+  public eventBus: EventMittNamespace.EventMitt = ReactInteractiveList.event;
   private currentAction = '';
 
   get emptyArgs() {
@@ -137,7 +137,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   constructor(inProps: ReactInteractiveListProps) {
     super(inProps);
     const { value } = inProps;
-    this.eventBus = ReactInteractiveList.event;
     this.state = { value: [...value] };
   }
 
@@ -245,6 +244,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   componentDidMount() {
     this.checkInitial();
     this.harmonyEvents = ReactHarmonyEvents.create(this);
+    this.eventBus = ReactInteractiveList.event;
   }
 
   componentWillUnmount() {
