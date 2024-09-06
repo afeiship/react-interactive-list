@@ -265,7 +265,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     this.setState({ value: inValue }, () => {
       onChange?.(inValue);
       this.eventBus.emit(`${name}:change`, {
-        name,
         options,
         action: this.currentAction,
         oldValue,
