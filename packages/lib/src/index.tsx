@@ -8,7 +8,17 @@ import { ReactHarmonyEvents } from '@jswork/harmony-events';
 const CLASS_NAME = 'react-interactive-list';
 const EMPTY_ARGS = { items: [], item: null, index: -1, options: null };
 
+type OnChangeCallbackOptions = {
+  name?: string;
+  options: any;
+  action: string;
+  oldValue: any[];
+  newValue: any[];
+  [key: string]: any;
+};
+
 type StdCallback = (value: any) => void;
+type OnChangeCallback = (value: any, options?: OnChangeCallbackOptions) => void;
 
 export type ReactInteractiveListProps = {
   /**
@@ -54,7 +64,7 @@ export type ReactInteractiveListProps = {
   /**
    * The change handler.
    */
-  onChange?: StdCallback;
+  onChange?: OnChangeCallback;
   /**
    * When trigger max/min boundary.
    */
@@ -263,14 +273,15 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const oldValue = this.state.value;
     const newValue = [...inValue];
     this.setState({ value: inValue }, () => {
-      onChange?.(inValue);
-      this.eventBus.emit(`${name}:change`, {
+      const opts: OnChangeCallbackOptions = {
         name,
         options,
         action: this.currentAction,
         oldValue,
         newValue,
-      });
+      };
+      onChange?.(inValue, opts);
+      this.eventBus.emit(`${name}:change`, opts);
       this.length < min && onError?.('EQ_MIN');
       this.length > max && onError?.('EQ_MAX');
     });
