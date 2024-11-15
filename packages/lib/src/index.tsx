@@ -245,6 +245,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const { value } = this.props;
     const { value: stateValue } = this.state;
     const isEqual = fdp(value, stateValue);
+    this.currentAction = 'did-update';
     if (value !== undefined && !isEqual) {
       this.handleChange(value);
     }
