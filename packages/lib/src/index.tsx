@@ -242,12 +242,12 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   /* ----- public eventBus methods ----- */
 
   componentDidUpdate() {
-    const { value } = this.props;
+    const { value, onChange } = this.props;
     const { value: stateValue } = this.state;
     const isEqual = fdp(value, stateValue);
-    this.currentAction = 'did-update';
     if (value !== undefined && !isEqual) {
-      this.handleChange(value);
+      this.setState({ value });
+      onChange?.(value);
     }
   }
 
@@ -280,6 +280,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
         oldValue,
         newValue,
       };
+      if (fdp(oldValue, newValue)) return;
       onChange?.(inValue, opts);
       this.eventBus.emit(`${name}:change`, opts);
       this.length < min && onError?.('EQ_MIN');

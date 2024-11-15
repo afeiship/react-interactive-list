@@ -26,9 +26,9 @@ function App() {
     };
   };
 
-  const handleChange = (value) => {
+  const handleChange = (value, opts) => {
     setItems(value);
-    console.log('value: ', value);
+    console.log('value/opts: ', value, opts);
   };
 
   useEffect(() => {
