@@ -280,7 +280,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
         oldValue,
         newValue,
       };
-      if (fdp(oldValue, newValue)) return;
       onChange?.(inValue, opts);
       this.eventBus.emit(`${name}:change`, opts);
       this.length < min && onError?.('EQ_MIN');
