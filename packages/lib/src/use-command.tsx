@@ -9,7 +9,7 @@ const useCommand = (inName?: string) => {
 
   // the command repository:
   const add = () => execute('add');
-  const remove = (index: number) => execute('remove', index);
+  const remove = (index: number, action?: string) => execute('remove', index, action);
   const set = (items: any[]) => execute('set', items);
   const up = (index: number) => execute('up', index);
   const down = (index: number) => execute('down', index);

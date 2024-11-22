@@ -90,6 +90,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   static events = [
     'add',
     'remove',
+    'cancel',
     'set',
     'up',
     'down',
@@ -174,12 +175,13 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     this.handleChange(_value);
   };
 
-  remove = (inIndex: number) => {
+  remove = (inIndex: number, action?: string) => {
     const { value } = this.state;
     const _value = value.slice(0);
+    const _action = action || 'remove';
     if (this.isLteMin) return;
     _value.splice(inIndex, 1);
-    this.currentAction = 'remove';
+    this.currentAction = _action;
     this.handleChange(_value);
   };
 
