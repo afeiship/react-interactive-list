@@ -20,6 +20,7 @@ type OnChangeCallbackOptions = {
 type StdCallback = (value: any) => void;
 type OnChangeCallback = (value: any, options?: OnChangeCallbackOptions) => void;
 export type RemoveOptions = number | { index: number; action: string };
+export type NotifyOptions = { action: string };
 
 export type ReactInteractiveListProps = {
   /**
@@ -236,9 +237,9 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     this.handleChange([]);
   };
 
-  notify = () => {
+  notify = (options?: NotifyOptions) => {
     const { value } = this.state;
-    this.currentAction = 'notify';
+    this.currentAction = options?.action || 'notify';
     this.handleChange(value.slice(0));
   };
 
