@@ -1,4 +1,4 @@
-import RcComponent from '.';
+import RcComponent, { RemoveOptions } from '.';
 
 const useCommand = (inName?: string) => {
   const name = inName || '@';
@@ -9,7 +9,7 @@ const useCommand = (inName?: string) => {
 
   // the command repository:
   const add = () => execute('add');
-  const remove = (index: number, action?: string) => execute('remove', { index, action });
+  const remove = (opts: RemoveOptions) => execute('remove', opts);
   const set = (items: any[]) => execute('set', items);
   const up = (index: number) => execute('up', index);
   const down = (index: number) => execute('down', index);
