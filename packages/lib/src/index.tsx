@@ -175,13 +175,13 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     this.handleChange(_value);
   };
 
-  remove = (inIndex: number, action?: string) => {
+  remove = (inIndex: number | { index: number; action: string }) => {
+    const args = typeof inIndex === 'number' ? { index: inIndex, action: 'remove' } : inIndex;
     const { value } = this.state;
     const _value = value.slice(0);
-    const _action = action || 'remove';
     if (this.isLteMin) return;
-    _value.splice(inIndex, 1);
-    this.currentAction = _action;
+    _value.splice(args.index, 1);
+    this.currentAction = args.action;
     this.handleChange(_value);
   };
 
