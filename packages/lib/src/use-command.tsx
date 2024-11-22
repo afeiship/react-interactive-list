@@ -1,4 +1,4 @@
-import RcComponent, { RemoveOptions } from '.';
+import RcComponent, { RemoveOptions, NotifyOptions } from '.';
 
 const useCommand = (inName?: string) => {
   const name = inName || '@';
@@ -10,11 +10,11 @@ const useCommand = (inName?: string) => {
   // the command repository:
   const add = () => execute('add');
   const remove = (opts: RemoveOptions) => execute('remove', opts);
+  const notify = (opts: NotifyOptions) => execute('notify', opts);
   const set = (items: any[]) => execute('set', items);
   const up = (index: number) => execute('up', index);
   const down = (index: number) => execute('down', index);
   const clear = () => execute('clear');
-  const notify = () => execute('notify');
   const top = (index: number) => execute('top', index);
   const bottom = (index: number) => execute('bottom', index);
 
