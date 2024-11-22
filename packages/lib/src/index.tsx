@@ -19,6 +19,7 @@ type OnChangeCallbackOptions = {
 
 type StdCallback = (value: any) => void;
 type OnChangeCallback = (value: any, options?: OnChangeCallbackOptions) => void;
+type MethodRemoveOptions = number | { index: number; action: string };
 
 export type ReactInteractiveListProps = {
   /**
@@ -175,8 +176,8 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     this.handleChange(_value);
   };
 
-  remove = (inIndex: number | { index: number; action: string }) => {
-    const args = typeof inIndex === 'number' ? { index: inIndex, action: 'remove' } : inIndex;
+  remove = (options: MethodRemoveOptions) => {
+    const args = typeof options === 'number' ? { index: options, action: 'remove' } : options;
     const { value } = this.state;
     const _value = value.slice(0);
     if (this.isLteMin) return;
