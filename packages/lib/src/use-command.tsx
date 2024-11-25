@@ -10,7 +10,7 @@ const useCommand = (inName?: string) => {
   // the command repository:
   const add = () => execute('add');
   const remove = (opts: RemoveOptions) => execute('remove', opts);
-  const notify = (opts: NotifyOptions) => execute('notify', opts);
+  const notify = (opts?: NotifyOptions) => execute('notify', opts);
   const set = (items: any[]) => execute('set', items);
   const up = (index: number) => execute('up', index);
   const down = (index: number) => execute('down', index);
