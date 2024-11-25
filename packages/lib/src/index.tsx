@@ -311,7 +311,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       ...props
     } = this.props;
 
-    if (value.length === 0) return templateEmpty?.(this.emptyArgs) || null;
+    if (!value || value.length === 0) return templateEmpty?.(this.emptyArgs) || null;
 
     return (
       <div className={cx(CLASS_NAME, className)} ref={forwardedRef} {...props}>
