@@ -150,7 +150,8 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   constructor(inProps: ReactInteractiveListProps) {
     super(inProps);
     const { value } = inProps;
-    this.state = { value: [...value] };
+    const _value = value || [];
+    this.state = { value: [..._value] };
   }
 
   private checkInitial = () => {
