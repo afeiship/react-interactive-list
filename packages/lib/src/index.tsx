@@ -121,8 +121,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   }
 
   get length() {
-    const { value } = this.state;
-    return value.length;
+    return this.stateValue.length;
   }
 
   get stateValue(){
@@ -140,10 +139,9 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   }
 
   get listView() {
-    const { value } = this.state;
     const { options, listProps } = this.props;
     const props = {
-      items: value,
+      items: this.stateValue,
       template: this.template,
       options,
       ...listProps,
