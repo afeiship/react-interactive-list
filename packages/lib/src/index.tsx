@@ -25,58 +25,77 @@ export type NotifyOptions = { action: string };
 export type ReactInteractiveListProps = {
   /**
    * The extended className for component.
+   * @default ''
    */
   className?: string;
   /**
    * The identity name.
+   * @default '@'
    */
   name?: string;
   /**
    * The initial size.
+   * @default 0
    */
   initial?: number;
   /**
    * The minimum size.
+   * @default 0
    */
   min: number;
   /**
    * The max size.
+   * @default 100
    */
   max: number;
   /**
    * The data source.
+   * @default []
    */
   value: any[];
   /**
+   * Whether use jsx template.
+   * @default false
+   */
+  isJsx?: boolean;
+  /**
    * The data item template.
+   * @default null
    */
   template: ReactListProps['template'];
   /**
    * The empty template.
+   * @default null
    */
   templateEmpty?: ReactListProps['templateEmpty'];
   /**
    * The extra options for template function.
+   * @default null
    */
   options?: any;
   /**
    * The empty create template.
+   * @default null
    */
   defaults: () => any;
   /**
    * The change handler.
+   * @default null
    */
   onChange?: OnChangeCallback;
   /**
    * When trigger max/min boundary.
+   * @default null
    */
   onError?: StdCallback;
   /**
    * Forwards a ref to the underlying div element.
+   * @default null
    */
   forwardedRef?: any;
   /**
    * The props for react-list.
+   * @default null
    */
   listProps?: ReactListProps;
 } & HTMLAttributes<HTMLDivElement>;
@@ -124,7 +143,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     return this.stateValue.length;
   }
 
-  get stateValue(){
+  get stateValue() {
     return this.state.value || [];
   }
 
@@ -139,11 +158,12 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   }
 
   get listView() {
-    const { options, listProps } = this.props;
+    const { isJsx, options, listProps } = this.props;
     const props = {
       items: this.stateValue,
       template: this.template,
       options,
+      isJsx,
       ...listProps,
     };
     return <ReactList {...props} />;
@@ -158,7 +178,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   private checkInitial = () => {
     const { initial, defaults } = this.props;
-    const stateValue = this.stateValue;;
+    const stateValue = this.stateValue;
     if (!initial) return;
     if (stateValue.length < initial) {
       const _value = stateValue.slice(0);
@@ -297,6 +317,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       min,
       max,
       value,
+      isJsx,
       template,
       templateEmpty,
       defaults,
