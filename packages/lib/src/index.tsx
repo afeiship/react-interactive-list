@@ -125,6 +125,10 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     return value.length;
   }
 
+  get stateValue(){
+    return this.state.value || [];
+  }
+
   get isLteMin() {
     const { min } = this.props;
     return this.length <= min;
@@ -156,11 +160,11 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   private checkInitial = () => {
     const { initial, defaults } = this.props;
-    const { value } = this.state;
+    const stateValue = this.stateValue;;
     if (!initial) return;
-    if (value.length < initial) {
-      const _value = value.slice(0);
-      for (let i = 0; i < initial - value.length; i++) {
+    if (stateValue.length < initial) {
+      const _value = stateValue.slice(0);
+      for (let i = 0; i < initial - stateValue.length; i++) {
         _value.push(defaults());
       }
       this.handleChange(_value);
@@ -169,9 +173,8 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   /* ----- public eventBus methods ----- */
   add = () => {
-    const { value } = this.state;
     const { defaults } = this.props;
-    const _value = value.slice(0);
+    const _value = this.stateValue.slice(0);
     if (this.isGteMax) return;
     _value.push(defaults());
     this.currentAction = 'add';
@@ -180,8 +183,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   remove = (options: RemoveOptions) => {
     const args = typeof options === 'number' ? { index: options, action: 'remove' } : options;
-    const { value } = this.state;
-    const _value = value.slice(0);
+    const _value = this.stateValue.slice(0);
     if (this.isLteMin) return;
     _value.splice(args.index, 1);
     this.currentAction = args.action;
@@ -194,8 +196,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   };
 
   up = (inIndex: number) => {
-    const { value } = this.state;
-    const _value = value.slice(0);
+    const _value = this.stateValue.slice(0);
     if (inIndex === 0) return;
     const temp = _value[inIndex - 1];
     _value[inIndex - 1] = _value[inIndex];
@@ -205,8 +206,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   };
 
   down = (inIndex: number) => {
-    const { value } = this.state;
-    const _value = value.slice(0);
+    const _value = this.stateValue.slice(0);
     if (inIndex === _value.length - 1) return;
     const temp = _value[inIndex + 1];
     _value[inIndex + 1] = _value[inIndex];
@@ -216,8 +216,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   };
 
   top = (index: number) => {
-    const { value } = this.state;
-    const _value = value.slice(0);
+    const _value = this.stateValue.slice(0);
     const item = _value.splice(index, 1);
     _value.unshift(item[0]);
     this.currentAction = 'top';
@@ -225,8 +224,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   };
 
   bottom = (index: number) => {
-    const { value } = this.state;
-    const _value = value.slice(0);
+    const _value = this.stateValue.slice(0);
     const item = _value.splice(index, 1);
     _value.push(item[0]);
     this.currentAction = 'bottom';
@@ -239,9 +237,8 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   };
 
   notify = (options?: NotifyOptions) => {
-    const { value } = this.state;
     this.currentAction = options?.action || 'notify';
-    this.handleChange(value.slice(0));
+    this.handleChange(this.stateValue.slice(0));
   };
 
   /* ----- public eventBus methods ----- */
@@ -268,8 +265,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   template = ({ item, index }) => {
     const { template, options } = this.props;
-    const { value } = this.state;
-    const _value = value.slice();
+    const _value = this.stateValue.slice();
     return template?.({ item, index, items: _value, options });
   };
 
