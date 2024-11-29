@@ -57,7 +57,7 @@ export type ReactInteractiveListProps = {
    * Whether use jsx template.
    * @default false
    */
-  isJsx?: boolean;
+  hookable?: boolean;
   /**
    * The data item template.
    * @default null
@@ -158,12 +158,12 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   }
 
   get listView() {
-    const { isJsx, options, listProps } = this.props;
+    const { hookable, options, listProps } = this.props;
     const props = {
       items: this.stateValue,
       template: this.template,
       options,
-      isJsx,
+      hookable,
       ...listProps,
     };
     return <ReactList {...props} />;
@@ -317,7 +317,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       min,
       max,
       value,
-      isJsx,
+      hookable,
       template,
       templateEmpty,
       defaults,
