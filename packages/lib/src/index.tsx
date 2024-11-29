@@ -1,6 +1,6 @@
 import ReactList, { ReactListProps, TemplateComponent } from '@jswork/react-list';
 import cx from 'classnames';
-import React, { Component, createElement, FC, HTMLAttributes } from 'react';
+import React, { Component, HTMLAttributes } from 'react';
 import fdp from 'fast-deep-equal';
 import type { EventMittNamespace } from '@jswork/event-mitt';
 import { ReactHarmonyEvents } from '@jswork/harmony-events';
