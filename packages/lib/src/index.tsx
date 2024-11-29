@@ -1,6 +1,6 @@
-import ReactList, { ReactListProps } from '@jswork/react-list';
+import ReactList, { ReactListProps, TemplateComponent } from '@jswork/react-list';
 import cx from 'classnames';
-import React, { Component, HTMLAttributes } from 'react';
+import React, { Component, createElement, FC, HTMLAttributes } from 'react';
 import fdp from 'fast-deep-equal';
 import type { EventMittNamespace } from '@jswork/event-mitt';
 import { ReactHarmonyEvents } from '@jswork/harmony-events';
@@ -282,9 +282,23 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   }
 
   template = ({ item, index }) => {
-    const { template, options } = this.props;
+    const { template, options, hookable } = this.props;
     const _value = this.stateValue.slice();
+    if (hookable) {
+      const Template = template as TemplateComponent;
+      return <Template item={item} index={index} items={_value} options={options} />;
+    }
     return template?.({ item, index, items: _value, options });
+  };
+
+  templateEmpty = () => {
+    const { templateEmpty, hookable } = this.props;
+    if (!templateEmpty) return null;
+    if (hookable) {
+      const Empty = templateEmpty as TemplateComponent;
+      return <Empty {...this.emptyArgs} />;
+    }
+    return templateEmpty(this.emptyArgs);
   };
 
   handleChange = (inValue: any[]) => {
@@ -326,7 +340,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       ...props
     } = this.props;
 
-    if (!value || value.length === 0) return templateEmpty?.(this.emptyArgs) || null;
+    if (!value || value.length === 0) return this.templateEmpty();
 
     return (
       <div className={cx(CLASS_NAME, className)} ref={forwardedRef} {...props}>
