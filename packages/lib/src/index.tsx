@@ -12,6 +12,7 @@ type OnChangeCallbackOptions = {
   name?: string;
   options: any;
   action: string;
+  payload?: any;
   oldValue: any[];
   newValue: any[];
   [key: string]: any;
@@ -20,7 +21,7 @@ type OnChangeCallbackOptions = {
 type StdCallback = (value: any) => void;
 type OnChangeCallback = (value: any, options?: OnChangeCallbackOptions) => void;
 export type RemoveOptions = number | { index: number; action: string; payload?: any };
-export type NotifyOptions = { action: string, payload?: any };
+export type NotifyOptions = { action: string; payload?: any };
 
 export type ReactInteractiveListProps = {
   /**
@@ -131,6 +132,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
 
   public eventBus: EventMittNamespace.EventMitt = ReactInteractiveList.event;
   private currentAction = '';
+  private currentPayload: any = null;
 
   get emptyArgs() {
     return {
@@ -205,6 +207,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     if (this.isLteMin) return;
     _value.splice(args.index, 1);
     this.currentAction = args.action;
+    this.currentPayload = args.payload;
     this.handleChange(_value);
   };
 
@@ -310,6 +313,7 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
         name,
         options,
         action: this.currentAction,
+        payload: this.currentPayload,
         oldValue,
         newValue,
       };
