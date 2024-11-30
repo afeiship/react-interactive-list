@@ -22,6 +22,7 @@ type StdCallback = (value: any) => void;
 type OnChangeCallback = (value: any, options?: OnChangeCallbackOptions) => void;
 export type RemoveOptions = number | { index: number; action: string; payload?: any };
 export type NotifyOptions = { action: string; payload?: any };
+export type UpdateOptions = { index: number; item: any; action: string; payload?: any };
 
 export type ReactInteractiveListProps = {
   /**
@@ -206,6 +207,16 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     const _value = this.stateValue.slice(0);
     if (this.isLteMin) return;
     _value.splice(args.index, 1);
+    this.currentAction = args.action;
+    this.currentPayload = args.payload;
+    this.handleChange(_value);
+  };
+
+  update = (options: UpdateOptions) => {
+    const args = options;
+    const _value = this.stateValue.slice(0);
+    if (args.index < 0 || args.index >= _value.length) return;
+    _value[args.index] = args.item;
     this.currentAction = args.action;
     this.currentPayload = args.payload;
     this.handleChange(_value);

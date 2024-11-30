@@ -1,4 +1,4 @@
-import RcComponent, { RemoveOptions, NotifyOptions } from '.';
+import RcComponent, { RemoveOptions, NotifyOptions, UpdateOptions } from '.';
 
 const useCommand = (inName?: string) => {
   const name = inName || '@';
@@ -11,6 +11,7 @@ const useCommand = (inName?: string) => {
   const add = () => execute('add');
   const remove = (opts: RemoveOptions) => execute('remove', opts);
   const notify = (opts?: NotifyOptions) => execute('notify', opts);
+  const update = (opts: UpdateOptions) => execute('update', opts);
   const set = (items: any[]) => execute('set', items);
   const up = (index: number) => execute('up', index);
   const down = (index: number) => execute('down', index);
@@ -22,11 +23,12 @@ const useCommand = (inName?: string) => {
     listen,
     add,
     remove,
+    notify,
+    update,
     set,
     up,
     down,
     clear,
-    notify,
     top,
     bottom,
   };
