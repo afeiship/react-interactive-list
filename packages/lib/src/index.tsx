@@ -19,8 +19,8 @@ type OnChangeCallbackOptions = {
 
 type StdCallback = (value: any) => void;
 type OnChangeCallback = (value: any, options?: OnChangeCallbackOptions) => void;
-export type RemoveOptions = number | { index: number; action: string };
-export type NotifyOptions = { action: string };
+export type RemoveOptions = number | { index: number; action: string; payload?: any };
+export type NotifyOptions = { action: string, payload?: any };
 
 export type ReactInteractiveListProps = {
   /**
