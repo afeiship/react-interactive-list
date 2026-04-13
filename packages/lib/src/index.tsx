@@ -1,4 +1,4 @@
-import ReactList, { ReactListProps, TemplateComponent } from '@jswork/react-list';
+import ReactList, { ReactListProps, Slot, renderSlot } from '@jswork/react-list';
 import cx from 'classnames';
 import React, { Component, HTMLAttributes } from 'react';
 import fdp from 'fast-deep-equal';
@@ -6,7 +6,6 @@ import type { EventMittNamespace } from '@jswork/event-mitt';
 import { ReactHarmonyEvents } from '@jswork/harmony-events';
 
 const CLASS_NAME = 'react-interactive-list';
-const EMPTY_ARGS = { items: [], item: null, index: -1, options: null };
 
 type OnChangeCallbackOptions = {
   name?: string;
@@ -56,22 +55,18 @@ export type ReactInteractiveListProps = {
    */
   value: any[];
   /**
-   * Whether use jsx template.
-   * @default false
+   * Key extractor for react-list items.
    */
-  hookable?: boolean;
+  keyExtractor: ReactListProps<any>['keyExtractor'];
   /**
-   * The data item template.
-   * @default null
+   * Slot configuration for react-list.
    */
-  template: ReactListProps['template'];
+  slots: {
+    item: Slot<{ item: any; index: number; data: any[] }>;
+    empty?: Slot<{ data: any[] }>;
+  };
   /**
-   * The empty template.
-   * @default null
-   */
-  templateEmpty?: ReactListProps['templateEmpty'];
-  /**
-   * The extra options for template function.
+   * The extra options for callback context.
    * @default null
    */
   options?: any;
@@ -95,11 +90,6 @@ export type ReactInteractiveListProps = {
    * @default null
    */
   forwardedRef?: any;
-  /**
-   * The props for react-list.
-   * @default null
-   */
-  listProps?: ReactListProps;
 } & HTMLAttributes<HTMLDivElement>;
 
 interface ReactInteractiveListState {
@@ -135,13 +125,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   private currentAction = '';
   private currentPayload: any = null;
 
-  get emptyArgs() {
-    return {
-      ...EMPTY_ARGS,
-      options: this.props.options,
-    };
-  }
-
   get length() {
     return this.stateValue.length;
   }
@@ -161,15 +144,14 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   }
 
   get listView() {
-    const { hookable, options, listProps } = this.props;
-    const props = {
-      items: this.stateValue,
-      template: this.template,
-      options,
-      hookable,
-      ...listProps,
-    };
-    return <ReactList {...props} />;
+    const { keyExtractor, slots } = this.props;
+    return (
+      <ReactList
+        data={this.stateValue}
+        keyExtractor={keyExtractor}
+        slots={slots}
+      />
+    );
   }
 
   constructor(inProps: ReactInteractiveListProps) {
@@ -295,26 +277,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
     this.harmonyEvents?.destroy();
   }
 
-  template = ({ item, index }) => {
-    const { template, options, hookable } = this.props;
-    const _value = this.stateValue.slice();
-    if (hookable) {
-      const Template = template as TemplateComponent;
-      return <Template item={item} index={index} items={_value} options={options} />;
-    }
-    return template?.({ item, index, items: _value, options });
-  };
-
-  templateEmpty = () => {
-    const { templateEmpty, hookable } = this.props;
-    if (!templateEmpty) return null;
-    if (hookable) {
-      const Empty = templateEmpty as TemplateComponent;
-      return <Empty {...this.emptyArgs} />;
-    }
-    return templateEmpty(this.emptyArgs);
-  };
-
   handleChange = (inValue: any[]) => {
     const { onChange, onError, min, max, name, options } = this.props;
     const oldValue = this.state.value;
@@ -340,22 +302,22 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       className,
       name,
       options,
-      listProps,
       forwardedRef,
       initial,
       min,
       max,
       value,
-      hookable,
-      template,
-      templateEmpty,
+      keyExtractor,
+      slots,
       defaults,
       onChange,
       onError,
       ...props
     } = this.props;
 
-    if (!value || value.length === 0) return this.templateEmpty();
+    if (!value || value.length === 0) {
+      return renderSlot(slots.empty, { data: this.stateValue });
+    }
 
     return (
       <div className={cx(CLASS_NAME, className)} ref={forwardedRef} {...props}>
