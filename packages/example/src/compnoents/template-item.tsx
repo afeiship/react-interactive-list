@@ -7,13 +7,13 @@ import React from 'react';
 import { useCommand } from '@jswork/react-interactive-list/src/main';
 
 interface TemplateItemProps {
-  items: any[];
+  data: any[];
   item: any;
   index: number;
 }
 
 const Anonymous = (props: TemplateItemProps) => {
-  const { items, item, index } = props;
+  const { data, item, index } = props;
   const { notify, top, bottom, remove, up, down } = useCommand('i1');
   const idx = index + 1;
   return (
@@ -33,7 +33,7 @@ const Anonymous = (props: TemplateItemProps) => {
         <button className="btn1" disabled={index === 0} onClick={() => up(index)}>
           Up
         </button>
-        <button className="btn1" disabled={index === items.length - 1} onClick={() => down(index)}>
+        <button className="btn1" disabled={index === data.length - 1} onClick={() => down(index)}>
           Down
         </button>
       </nav>

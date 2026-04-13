@@ -5,8 +5,8 @@ import TemplateItem from './compnoents/template-item.tsx';
 const messages = [
   'I wondered why the baseball was getting bigger. Then it hit me.',
   'Police were called to a day care, where a three-year-old was resisting a rest.',
-  'Did you hear about the guy whose whole left side was cut off? He’s all right now.',
-  'The roundest knight at King Arthur’s round table was Sir Cumference.',
+  'Did you hear about the guy whose whole left side was cut off? He\'s all right now.',
+  'The roundest knight at King Arthur\'s round table was Sir Cumference.',
   'To write with a broken pencil is pointless.',
 ].map((message, index) => ({ message, index, id: `id_${index}` }));
 
@@ -15,8 +15,9 @@ function App() {
   const ref1 = useRef(null);
   const { add, remove, clear, up, down, top, bottom, notify, listen } = useCommand('i1');
 
-  const template = ({ item, index }) => {
-    return <TemplateItem key={index} item={item} index={index} items={items} />;
+  const slots = {
+    item: TemplateItem,
+    empty: () => <div className="text-gray-400 p-4 text-center">No items</div>,
   };
 
   const defaults = () => {
@@ -57,9 +58,9 @@ function App() {
       <ReactInteractiveListUI
         name="i1"
         ref={ref1}
-        listProps={{ className: 'y-1', as: 'section' }}
+        keyExtractor="id"
+        slots={slots}
         value={items}
-        template={template}
         defaults={defaults}
         onChange={handleChange}
       />
