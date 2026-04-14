@@ -1,6 +1,5 @@
-import ReactList, { ReactListProps, Slot, renderSlot } from '@jswork/react-list';
-import cx from 'classnames';
-import React, { Component, HTMLAttributes } from 'react';
+import ReactList, { ReactListProps, Slot } from '@jswork/react-list';
+import React, { Component } from 'react';
 import fdp from 'fast-deep-equal';
 import type { EventMittNamespace } from '@jswork/event-mitt';
 import { ReactHarmonyEvents } from '@jswork/harmony-events';
@@ -89,8 +88,7 @@ export type ReactInteractiveListProps = {
    * Forwards a ref to the underlying div element.
    * @default null
    */
-  forwardedRef?: any;
-} & HTMLAttributes<HTMLDivElement>;
+};
 
 interface ReactInteractiveListState {
   value: any[];
@@ -141,17 +139,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   get isGteMax() {
     const { max } = this.props;
     return this.length >= max;
-  }
-
-  get listView() {
-    const { keyExtractor, slots } = this.props;
-    return (
-      <ReactList
-        data={this.stateValue}
-        keyExtractor={keyExtractor}
-        slots={slots}
-      />
-    );
   }
 
   constructor(inProps: ReactInteractiveListProps) {
@@ -302,28 +289,17 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
       className,
       name,
       options,
-      forwardedRef,
       initial,
       min,
       max,
       value,
-      keyExtractor,
-      slots,
       defaults,
       onChange,
       onError,
       ...props
     } = this.props;
 
-    if (!value || value.length === 0) {
-      return renderSlot(slots.empty, { data: this.stateValue });
-    }
-
-    return (
-      <div className={cx(CLASS_NAME, className)} ref={forwardedRef} {...props}>
-        {this.listView}
-      </div>
-    );
+    return <ReactList data={this.stateValue} {...props} />;
   }
 }
 
