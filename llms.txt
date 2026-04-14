@@ -1,0 +1,282 @@
+# @jswork/react-interactive-list
+> A React interactive list component with full CRUD operations, reorder commands, event bus system, and slot-based rendering. Designed for building dynamic, editable list UIs with minimal boilerplate. Written in TypeScript with React 18+ support.
+
+**Important notes for agents:**
+- This is a single-component library focused on interactive list management (add/remove/reorder/update).
+- The component uses an internal event bus (`@jswork/event-mitt`) to decouple commands from UI.
+- The `useCommand` hook is the recommended way to control the list from parent or child components.
+- Slot-based rendering (`slots.item` / `slots.empty`) replaces traditional `template` / `renderItem` props.
+
+## Installation
+
+```bash
+npm install -S @jswork/react-interactive-list
+```
+
+Peer dependencies (install if not present):
+```bash
+npm install react react-dom @jswork/event-mitt @jswork/harmony-events @jswork/react-list classnames fast-deep-equal
+```
+
+## Imports
+
+```tsx
+// Published package
+import ReactInteractiveList, { useCommand } from '@jswork/react-interactive-list/main';
+
+// Or from source (during development)
+import ReactInteractiveList, { useCommand } from '@jswork/react-interactive-list/src/main';
+```
+
+## Component: ReactInteractiveList
+
+### Props (ReactInteractiveListProps)
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | `'@'` | Identity name for event bus scoping. Must match `useCommand(name)`. |
+| `value` | `any[]` | `[]` | Controlled data source array. |
+| `slots` | `{ item: Slot, empty?: Slot }` | — | **Required.** Slot components for rendering items and empty state. |
+| `keyExtractor` | `string \| ((item, index) => string)` | — | Key field name or extractor function for list items. |
+| `defaults` | `() => any` | — | **Required.** Factory function that returns a new item object for `add()`. |
+| `initial` | `number` | `0` | Auto-fill items to this count on mount. |
+| `min` | `number` | `0` | Minimum allowed items. Triggers `onError('EQ_MIN')` if breached. |
+| `max` | `number` | `100` | Maximum allowed items. Triggers `onError('EQ_MAX')` if exceeded. |
+| `onChange` | `(value, options?) => void` | — | Called with new array on every mutation. `options` includes `action`, `payload`, `oldValue`, `newValue`. |
+| `onError` | `(code: 'EQ_MIN' \| 'EQ_MAX') => void` | — | Called when list size hits `min` or `max` boundary. |
+| `options` | `any` | — | Extra context passed through to `onChange` callback options. |
+| `className` | `string` | — | Additional CSS class name. |
+| `forwardedRef` | `Ref` | — | Ref to the underlying div element. |
+
+### Slot Types
+
+```tsx
+// Slot can be a React component or a render function
+type Slot<T> = React.ComponentType<T> | ((props: T) => React.ReactNode);
+
+// Item slot receives:
+slots.item: Slot<{ item: any; index: number; data: any[] }>
+
+// Empty slot receives:
+slots.empty?: Slot<{ data: any[] }>
+```
+
+## Hook: useCommand
+
+The `useCommand` hook returns command functions that communicate with the component via the event bus. Pass the same `name` as the component's `name` prop.
+
+```tsx
+const { add, remove, update, set, up, down, top, bottom, clear, notify, listen } = useCommand('i1');
+```
+
+### Commands
+
+| Command | Signature | Description |
+|---------|-----------|-------------|
+| `add()` | `() => void` | Append a new item (created via `defaults()`) to the end of the list. Respects `max` limit. |
+| `remove(opts)` | `(index: number \| { index, action, payload? }) => void` | Remove item at index. Pass a number for simple removal, or an object for custom action tracking. Respects `min` limit. |
+| `update(opts)` | `({ index, item, action, payload? }) => void` | Replace item at `index` with `item`. |
+| `set(items)` | `(any[]) => void` | Replace the entire list with a new array. |
+| `up(index)` | `(number) => void` | Move item at `index` one position up. No-op if already first. |
+| `down(index)` | `(number) => void` | Move item at `index` one position down. No-op if already last. |
+| `top(index)` | `(number) => void` | Move item at `index` to the first position. |
+| `bottom(index)` | `(number) => void` | Move item at `index` to the last position. |
+| `clear()` | `() => void` | Remove all items (sets to `[]`). |
+| `notify(opts?)` | `({ action?, payload? }) => void` | Trigger `onChange` without changing data. Useful for signaling external edits (e.g., inline field changes). |
+| `listen(cmd, callback)` | `(string, Function) => { destroy: () => void }` | Listen for a specific command event. Returns a subscription with `destroy()` for cleanup. |
+
+### onChange Callback Options
+
+Every mutation triggers `onChange` with these metadata:
+
+```tsx
+type OnChangeCallbackOptions = {
+  name: string;          // Component's name prop
+  options: any;          // Extra options prop
+  action: string;        // 'add' | 'remove' | 'update' | 'set' | 'up' | 'down' | 'top' | 'bottom' | 'clear' | 'notify'
+  payload?: any;         // Custom payload from remove/update/notify
+  oldValue: any[];       // Previous list value
+  newValue: any[];       // New list value
+}
+```
+
+## Static Properties
+
+```tsx
+ReactInteractiveList.displayName  // 'react-interactive-list'
+ReactInteractiveList.events       // ['add','remove','cancel','set','up','down','top','bottom','clear','notify','change']
+ReactInteractiveList.event        // Global event bus instance (EventMitt)
+```
+
+## Usage Examples
+
+### Basic Setup
+
+```tsx
+import React, { useState } from 'react';
+import ReactInteractiveList, { useCommand } from '@jswork/react-interactive-list/main';
+
+// Define your item component (receives item, index, data via slot props)
+const ItemSlot = ({ item, index, data }) => (
+  <div>
+    <span>{index + 1}. {item.title}</span>
+  </div>
+);
+
+// Define empty state component
+const EmptySlot = () => <div>No items yet.</div>;
+
+function App() {
+  const [items, setItems] = useState([
+    { id: '1', title: 'First item' },
+    { id: '2', title: 'Second item' },
+  ]);
+  const { add, remove, clear } = useCommand('myList');
+
+  return (
+    <div>
+      <button onClick={add}>Add</button>
+      <button onClick={() => remove(0)}>Remove First</button>
+      <button onClick={clear}>Clear All</button>
+
+      <ReactInteractiveList
+        name="myList"
+        value={items}
+        slots={{ item: ItemSlot, empty: EmptySlot }}
+        keyExtractor="id"
+        defaults={() => ({ id: String(Date.now()), title: 'New item' })}
+        onChange={(value) => setItems(value)}
+      />
+    </div>
+  );
+}
+```
+
+### Reorder Controls Inside Item Slot
+
+```tsx
+const ItemSlot = ({ item, index, data }) => {
+  const { up, down, top, bottom, remove } = useCommand('myList');
+
+  return (
+    <div>
+      <button disabled={index === 0} onClick={() => up(index)}>Up</button>
+      <button disabled={index === data.length - 1} onClick={() => down(index)}>Down</button>
+      <button onClick={() => top(index)}>To Top</button>
+      <button onClick={() => bottom(index)}>To Bottom</button>
+      <button onClick={() => remove(index)}>Delete</button>
+      <span>{item.title}</span>
+    </div>
+  );
+};
+```
+
+### Inline Editing with notify
+
+```tsx
+const ItemSlot = ({ item, index }) => {
+  const { notify } = useCommand('myList');
+
+  return (
+    <input
+      value={item.title}
+      onChange={(e) => {
+        item.title = e.target.value;
+        notify(); // triggers onChange without adding/removing items
+      }}
+    />
+  );
+};
+```
+
+### Event Listening with cleanup
+
+```tsx
+function App() {
+  const { listen } = useCommand('myList');
+
+  useEffect(() => {
+    const sub = listen('remove', (args) => {
+      console.log('Item removed:', args);
+    });
+    return () => sub.destroy(); // cleanup on unmount
+  }, []);
+
+  // ...
+}
+```
+
+### Min/Max Boundaries
+
+```tsx
+<ReactInteractiveList
+  name="myList"
+  value={items}
+  slots={slots}
+  keyExtractor="id"
+  defaults={defaults}
+  min={1}     // at least 1 item required
+  max={10}    // at most 10 items allowed
+  onError={(code) => {
+    if (code === 'EQ_MIN') console.warn('Minimum items reached');
+    if (code === 'EQ_MAX') console.warn('Maximum items reached');
+  }}
+  onChange={handleChange}
+/>
+```
+
+### Initial Items Auto-fill
+
+```tsx
+// If list is empty on mount, auto-fill to 3 items using defaults()
+<ReactInteractiveList
+  name="myList"
+  initial={3}
+  value={items}
+  slots={slots}
+  keyExtractor="id"
+  defaults={() => ({ id: crypto.randomUUID(), title: '' })}
+  onChange={handleChange}
+/>
+```
+
+## Event Bus
+
+The component uses `@jswork/event-mitt` as a global event bus. Events are scoped by `name`:
+
+- Pattern: `{name}:{command}` (e.g., `myList:add`, `myList:remove`)
+- Change event: `{name}:change` (emitted on every mutation with full callback options)
+
+You can subscribe directly:
+
+```tsx
+ReactInteractiveList.event.on('myList:change', (opts) => {
+  console.log(opts.action, opts.oldValue, opts.newValue);
+});
+```
+
+## Dependencies
+
+- `@jswork/react-list` — Base list rendering component with slot system
+- `@jswork/event-mitt` — Lightweight event emitter
+- `@jswork/harmony-events` — Auto-wires static events to component methods
+- `classnames` — CSS class utility
+- `fast-deep-equal` — Deep equality comparison for state sync
+
+## Links
+
+- [npm package](https://www.npmjs.org/package/@jswork/react-interactive-list)
+- [GitHub repository](https://github.com/afeiship/react-interactive-list)
+- [Live demo](https://afeiship.github.io/react-interactive-list/)
+- [License: MIT](https://github.com/afeiship/react-interactive-list/blob/master/LICENSE.txt)
+
+## Usage Notes for Agents
+
+- Always set `name` prop on the component and pass the same name to `useCommand(name)` — they must match.
+- The `slots.item` component receives `{ item, index, data }` as props (not `template` or `renderItem`).
+- Use `keyExtractor` with a string field name (e.g., `"id"`) for simple cases, or a function for complex keys.
+- The `defaults` function must return a new object each time — it is called by `add()`.
+- `onChange` is the single source of truth for state updates — always update your state here.
+- `notify()` is the correct way to trigger re-render after mutating item fields in-place (e.g., editing input values).
+- The component supports controlled mode: when `value` prop changes externally, the component syncs internal state.
+- Use `listen()` with cleanup in `useEffect` to avoid memory leaks.
