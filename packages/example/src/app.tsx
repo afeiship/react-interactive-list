@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import ReactInteractiveListUI, { useCommand } from '@jswork/react-interactive-list/src/main';
+import { ReactInteractiveListFc, useCommand } from '@jswork/react-interactive-list/src/main';
 import TemplateItem from './compnoents/template-item.tsx';
 
 const messages = [
@@ -55,7 +55,7 @@ function App() {
           Empty
         </button>
       </nav>
-      <ReactInteractiveListUI
+      <ReactInteractiveListFc
         name="i1"
         ref={ref1}
         keyExtractor="id"

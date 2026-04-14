@@ -1,11 +1,11 @@
-import RcComponent, { RemoveOptions, NotifyOptions, UpdateOptions } from '.';
+import { ReactInteractiveList, RemoveOptions, NotifyOptions, UpdateOptions } from '.';
 
 const useCommand = (inName?: string) => {
   const name = inName || '@';
   const execute = (command: string, ...args: any[]) =>
-    RcComponent.event?.emit(`${name}:${command}`, ...args);
+    ReactInteractiveList.event?.emit(`${name}:${command}`, ...args);
 
-  const listen = (cmd: string, callback: any) => RcComponent.event?.on(`${name}:${cmd}`, callback);
+  const listen = (cmd: string, callback: any) => ReactInteractiveList.event?.on(`${name}:${cmd}`, callback);
 
   // the command repository:
   const add = () => execute('add');
