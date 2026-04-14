@@ -1,12 +1,8 @@
-import React from 'react';
-import ReactInteractiveList from '.';
+import { ReactInteractiveList, ReactInteractiveListFc } from '.';
 import useCommand from './use-command';
 
 export {
   useCommand,
-  ReactInteractiveList
+  ReactInteractiveList,
+  ReactInteractiveListFc,
 };
-
-export default React.forwardRef((props: any, ref) => {
-  return <ReactInteractiveList {...props} ref={ref} />;
-});

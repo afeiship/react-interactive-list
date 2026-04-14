@@ -94,7 +94,7 @@ interface ReactInteractiveListState {
   value: any[];
 }
 
-class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInteractiveListState> {
+export class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInteractiveListState> {
   private harmonyEvents: ReactHarmonyEvents | null = null;
   static displayName = CLASS_NAME;
   static event: EventMittNamespace.EventMitt;
@@ -303,4 +303,6 @@ class ReactInteractiveList extends Component<ReactInteractiveListProps, ReactInt
   }
 }
 
-export default ReactInteractiveList;
+export const ReactInteractiveListFc = React.forwardRef((props: any, ref) => {
+  return <ReactInteractiveList {...props} ref={ref} />;
+});
