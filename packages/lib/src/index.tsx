@@ -3,6 +3,9 @@ import React, { Component } from 'react';
 import fdp from 'fast-deep-equal';
 import type { EventMittNamespace } from '@jswork/event-mitt';
 import { ReactHarmonyEvents } from '@jswork/harmony-events';
+import useCommand from './use-command';
+
+export type UseCommandReturn = ReturnType<typeof useCommand>;
 
 const CLASS_NAME = 'react-interactive-list';
 

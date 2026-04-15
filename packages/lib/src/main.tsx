@@ -1,4 +1,4 @@
-import { ReactInteractiveList, ReactInteractiveListFc, ReactInteractiveListProps } from '.';
+import { ReactInteractiveList, ReactInteractiveListFc, ReactInteractiveListProps, UseCommandReturn } from '.';
 import useCommand from './use-command';
 
 export {
@@ -9,4 +9,5 @@ export {
 
 export type {
   ReactInteractiveListProps,
+  UseCommandReturn,
 };
